@@ -473,11 +473,16 @@ export class Game {
     });
 
     // Twelve pixels under the title, eight above the label: the number needs to
-    // sit on its own rather than touching either.
+    // sit on its own rather than touching either. It goes gold on a record, so
+    // NEW BEST! visibly belongs to this number and not to anything else on the
+    // panel.
     drawText(ctx, String(Math.floor(this.score)), W / 2, 46, {
-      scale: 4, align: 'center', color: PAL.hud, outline: PAL.ink,
+      scale: 4, align: 'center',
+      color: this.newBest ? PAL.accent : PAL.hud, outline: PAL.ink,
     });
-    drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
+    drawText(ctx, 'SCORE', W / 2, 82, {
+      align: 'center', color: this.newBest ? PAL.accent : PAL.foamSh,
+    });
 
     // Two columns: what you did on the left, your standing on the right.
     drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 102, { color: PAL.hud });
@@ -490,11 +495,13 @@ export class Game {
         align: 'right', color: flash ? PAL.accent : PAL.foam,
       });
     } else {
-      drawText(ctx, `BEST ${this.save.best}`, 268, 102, { align: 'right', color: PAL.foamSh });
+      drawText(ctx, `BEST SCORE ${this.save.best}`, 268, 102, {
+        align: 'right', color: PAL.foamSh,
+      });
     }
-    drawText(ctx, `TOTAL ${this.save.shells}`, 268, 116, {
-      align: 'right', color: PAL.foamSh,
-    });
+    // Your shell bank, iconed to match the row opposite: left column is this
+    // run, right column is all time. "TOTAL" read like a total score.
+    shellCount(ctx, 268, 116, this.save.shells, 1, PAL.foamSh);
 
     button(ctx, R.retry, 'AGAIN', { active: true });
     button(ctx, R.toShop, 'SURFERS');
