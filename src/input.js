@@ -3,7 +3,7 @@ const KEY_ACTIONS = {
   ArrowDown: 'down', KeyS: 'down',
   Space: 'boost', ShiftLeft: 'boost', ShiftRight: 'boost', KeyK: 'boost',
   Enter: 'confirm', NumpadEnter: 'confirm', KeyR: 'confirm',
-  KeyM: 'mute',
+  KeyM: 'music', KeyN: 'sfx',
   Escape: 'back',
 };
 

@@ -39,7 +39,8 @@ well back while you ride clean and rears into view once you start taking hits.
 | Change lane | ▲ / ▼ keys, bottom left | `↑` `↓` or `W` `S` |
 | Boost | hold the BOOST key, bottom right | hold `Space` or `Shift` |
 | Confirm / retry | on-screen buttons | `Enter` or `R` |
-| Mute | sound button on the title screen | `M` |
+| Music on / off | note button on the title screen | `M` |
+| Sound effects on / off | speaker button on the title screen | `N` |
 
 Both thumbs work at once — you can hold boost and change lanes together.
 
@@ -51,10 +52,10 @@ Progress is saved to `localStorage`.
 | Surfer | Cost | Perk |
 |---|---|---|
 | Jungle Boy | free | Fastest lane switch |
-| Mujde | 300 | Boost lasts longer |
-| Zeynep | 1000 | +20% shells |
-| Cindy | 2000 | HIGH TIDE fills faster |
-| Zeyna | 3600 | Free shield each run |
+| Mujde | 250 | Boost lasts longer |
+| Zeynep | 700 | +20% shells |
+| Cindy | 1400 | HIGH TIDE fills faster |
+| Zeyna | 2400 | Free shield each run |
 
 ## Running it
 
@@ -128,6 +129,15 @@ wrong for a number: the snapping alternates 2,1,2,1 across the columns, so stems
 inside one digit end up different weights. The HUD score and shell counts use
 `drawNumber` instead, a separate 7x9 numeral set drawn at 1:1 with even
 two-pixel strokes.
+
+The music is one sixteen-second tropical loop — steel pan over a tresillo bass,
+off-beat chord stabs, congas and a sixteenth shaker — synthesised into a single
+buffer at startup and played with `loop = true`. Rendering it once rather than
+scheduling note by note makes the seam sample-accurate and immune to a throttled
+timer in a background tab. It is built on a `setTimeout` off the first tap,
+because rendering blocks for a few hundred milliseconds and that tap should not
+be the frame that stalls. The bass sits at C3 rather than C2: an octave lower is
+below what a phone speaker reproduces.
 
 `tools/make-icons.py` redraws the app icons. It reads the sprite rows and
 palettes out of `src/`, so the icon cannot drift from what the game draws.

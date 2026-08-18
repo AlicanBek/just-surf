@@ -1,6 +1,6 @@
 import { W, PAL, TUNE } from './config.js';
 import { drawText, drawNumber, numberWidth, textWidth, GLYPH_H } from './font.js';
-import { SPRITES } from './sprites.js';
+import { SPRITES, ICONS, drawIcon } from './sprites.js';
 
 // Thumb controls. Drawn inside the foreground strip below the last lane so they
 // never cover water you are riding on, and kept clear of the screen edges: the
@@ -79,6 +79,8 @@ export function button(ctx, r, label, opts = {}) {
   // shrink rather than spill out of the box.
   const scale = fits(label, r, BTN_SCALE) ? BTN_SCALE : 1;
 
+  const ink = active ? PAL.ink : dim ? '#6a8ba5' : PAL.hud;
+
   ctx.fillStyle = active ? PAL.accent : dim ? '#123049' : '#17456b';
   ctx.fillRect(r.x, r.y, r.w, r.h);
   ctx.fillStyle = active ? PAL.foam : PAL.foamSh;
@@ -86,9 +88,15 @@ export function button(ctx, r, label, opts = {}) {
   ctx.fillRect(r.x, r.y + r.h - 1, r.w, 1);
   ctx.fillRect(r.x, r.y, 1, r.h);
   ctx.fillRect(r.x + r.w - 1, r.y, 1, r.h);
+  if (opts.icon) {
+    // Icon buttons carry no text: centre the glyph in the box instead.
+    const g = ICONS[opts.icon];
+    drawIcon(ctx, opts.icon,
+      Math.round(r.x + (r.w - g.w) / 2), Math.round(r.y + (r.h - g.h) / 2), ink);
+    return;
+  }
   drawText(ctx, label, r.x + r.w / 2, r.y + (r.h - GLYPH_H * scale) / 2 + 1, {
-    scale, align: 'center',
-    color: active ? PAL.ink : dim ? '#6a8ba5' : PAL.hud,
+    scale, align: 'center', color: ink,
   });
 }
 

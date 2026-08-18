@@ -7,6 +7,7 @@ Sprite rows and palettes are read out of src/, so the icon cannot drift from
 what the game actually draws. Each size is rendered natively at a whole-number
 sprite scale rather than resampled from one big image, so the pixels stay square.
 """
+import math
 import os
 import re
 import struct
@@ -110,6 +111,26 @@ def icon(size, scale, path):
             if d > r + 2 or cy + dy >= water_y:
                 continue
             put(cx + dx, cy + dy, sun if d <= r else edge)
+
+    # Sun rays, the same wedge fan the game draws across the sky. Two passes,
+    # the second stopping short, so they are brightest near the sun.
+    ray = rgb(PAL['ray'])
+    rays, step = 13, math.pi / 13
+    half = step * 0.36
+    for reach, alpha in ((size * 0.95, 0.30), (size * 0.42, 0.22)):
+        for y in range(water_y):
+            for x in range(size):
+                dx, dy = x - cx, y - cy
+                if dy > 0:
+                    continue                      # above the sun only
+                d = (dx * dx + dy * dy) ** 0.5
+                if d < r + 3 or d > reach:
+                    continue
+                a = math.atan2(-dy, dx)
+                phase = a % step
+                if min(phase, step - phase) > half:
+                    continue
+                pix[y * size + x] = mix(pix[y * size + x], ray, alpha)
 
     # Water: banded lanes, darkest at the horizon.
     bands = [rgb(h) for h in LANES]

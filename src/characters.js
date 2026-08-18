@@ -25,7 +25,7 @@ export const ROSTER = [
     name: 'MUJDE',
     blurb: 'NEW TO THE LINEUP',
     perk: 'BOOST LASTS LONGER',
-    cost: 300,
+    cost: 250,
     colors: {
       s: '#d9a074', S: '#ad7850', 2: '#d9a074', Z: '#d9a074',
       h: '#4a2f1e', H: '#6d4728', 3: '#4a2f1e',
@@ -39,7 +39,7 @@ export const ROSTER = [
     name: 'ZEYNEP',
     blurb: 'FIRST OUT EVERY MORNING',
     perk: '+20% SHELLS',
-    cost: 1000,
+    cost: 700,
     colors: {
       2: '#f0c49a',
       s: '#f0c49a', S: '#c99a72', Z: '#f0c49a',
@@ -54,7 +54,7 @@ export const ROSTER = [
     name: 'CINDY',
     blurb: 'NINE LIVES, ONE BOARD',
     perk: 'HIGH TIDE FILLS FASTER',
-    cost: 2000,
+    cost: 1400,
     colors: {
       // A grey cat, not a person: mid fur over the body, darker fur on the
       // crown, ears and tail, cream markings on the muzzle, chin, chest and
@@ -72,7 +72,7 @@ export const ROSTER = [
     name: 'ZEYNA',
     blurb: 'ZEYNEP AFTER THE STORM',
     perk: 'FREE SHIELD EACH RUN',
-    cost: 3600,
+    cost: 2400,
     colors: {
       2: '#c98a52',
       s: '#c98a52', S: '#a06a3a', Z: '#c98a52',
@@ -87,7 +87,10 @@ export const ROSTER = [
 const SAVE_KEY = 'justsurf.save.v1';
 const FIRST = ROSTER[0].id;
 
-const DEFAULT_SAVE = { shells: 0, best: 0, unlocked: [FIRST], selected: FIRST, runs: 0 };
+const DEFAULT_SAVE = {
+  shells: 0, best: 0, unlocked: [FIRST], selected: FIRST, runs: 0,
+  music: true, sfx: true,
+};
 
 export function loadSave() {
   try {
@@ -105,6 +108,9 @@ export function loadSave() {
       runs: s.runs | 0,
       unlocked,
       selected: known.has(s.selected) ? s.selected : FIRST,
+      // Absent in older saves, so default both on rather than off.
+      music: s.music !== false,
+      sfx: s.sfx !== false,
     };
   } catch {
     return { ...DEFAULT_SAVE };

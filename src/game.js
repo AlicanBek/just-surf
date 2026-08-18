@@ -14,9 +14,10 @@ import { BTN, drawPad, drawHud, panel, button, meter, shellCount } from './ui.js
 // Every button is BTN_H tall and shares one baseline, so the rows line up
 // across screens. Only widths differ, because the labels do.
 const R = {
-  surfers:  { x: 8,   y: 152, w: 116, h: 24 },
-  play:     { x: 132, y: 152, w: 116, h: 24 },
-  sound:    { x: 272, y: 152, w: 40,  h: 24 },
+  surfers:  { x: 8,   y: 152, w: 104, h: 24 },
+  play:     { x: 118, y: 152, w: 110, h: 24 },
+  music:    { x: 234, y: 152, w: 36,  h: 24 },
+  sfx:      { x: 276, y: 152, w: 36,  h: 24 },
   prev:     { x: 8,   y: 74,  w: 24,  h: 28 },
   next:     { x: 88,  y: 74,  w: 24,  h: 28 },
   back:     { x: 8,   y: 152, w: 148, h: 24 },
@@ -41,9 +42,14 @@ export class Game {
     this.notice = 0;
     // Set by main.js when running in a browser tab on a touch device.
     this.showInstallHint = false;
+    this.sfx.musicOn = this.save.music;
+    this.sfx.sfxOn = this.save.sfx;
     this.applyCharacter();
     this.resetRun();
   }
+
+  setMusic(on) { this.save.music = on; writeSave(this.save); }
+  setSfx(on) { this.save.sfx = on; writeSave(this.save); }
 
   applyCharacter() {
     this.player.setCharacter(getCharacter(this.save.selected));
@@ -73,7 +79,8 @@ export class Game {
   // --- update ---------------------------------------------------------------
   update(dt, input) {
     this.t += dt;
-    if (input.hit('mute')) this.sfx.toggleMute();
+    if (input.hit('music')) this.setMusic(this.sfx.toggleMusic());
+    if (input.hit('sfx')) this.setSfx(this.sfx.toggleSfx());
 
     for (const f of this.floaters) { f.y -= 22 * dt; f.life -= dt; }
     this.floaters = this.floaters.filter((f) => f.life > 0);
@@ -91,7 +98,8 @@ export class Game {
     this.scene.update(dt, this.menuScroll);
     if (input.tapIn(R.play) || input.hit('confirm')) this.startRun();
     else if (input.tapIn(R.surfers)) this.state = 'shop';
-    else if (input.tapIn(R.sound)) this.sfx.toggleMute();
+    else if (input.tapIn(R.music)) this.setMusic(this.sfx.toggleMusic());
+    else if (input.tapIn(R.sfx)) this.setSfx(this.sfx.toggleSfx());
   }
 
   updateShop(dt, input) {
@@ -412,7 +420,16 @@ export class Game {
 
     button(ctx, R.surfers, 'SURFERS');
     button(ctx, R.play, 'PADDLE OUT', { active: true });
-    button(ctx, R.sound, this.sfx.muted ? 'OFF' : 'ON', { dim: this.sfx.muted });
+    // A note and a speaker rather than words: lit and whole when on, dimmed and
+    // struck through when off, so the state reads without a label.
+    button(ctx, R.music, '', {
+      active: this.sfx.musicOn, dim: !this.sfx.musicOn,
+      icon: this.sfx.musicOn ? 'noteOn' : 'noteOff',
+    });
+    button(ctx, R.sfx, '', {
+      active: this.sfx.sfxOn, dim: !this.sfx.sfxOn,
+      icon: this.sfx.sfxOn ? 'speakerOn' : 'speakerOff',
+    });
   }
 
   drawShop(ctx) {

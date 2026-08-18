@@ -519,6 +519,53 @@ const PALM_B = [
 const GULL_A = ['.f...f.', '..f.f..', '...f...'];
 const GULL_B = ['.......', 'f.....f', '.f...f.', '..fff..'];
 
+// HUD icons for the two audio toggles. 'i' is the lit shape, so they take the
+// button's own colour rather than carrying one of their own.
+const NOTE_ON = [
+  '....iiiii',
+  '....iiiii',
+  '....ii..i',
+  '....ii...',
+  '....ii...',
+  '....ii...',
+  '.iiiii...',
+  'iiiiii...',
+  'iiiii....',
+];
+const NOTE_OFF = [
+  '....iiiii',
+  '...iiiiii',
+  '..i.ii..i',
+  '....ii...',
+  '...ii....',
+  '..ii.....',
+  '.iiiii...',
+  'iiiii.i..',
+  'iiiii....',
+];
+const SPEAKER_ON = [
+  '...ii....',
+  '..iii..i.',
+  '.iiii.i.i',
+  'iiiii.i.i',
+  'iiiii.i.i',
+  'iiiii.i.i',
+  '.iiii.i.i',
+  '..iii..i.',
+  '...ii....',
+];
+const SPEAKER_OFF = [
+  '...ii....',
+  '..iii....',
+  '.iiii.i.i',
+  'iiiii..i.',
+  'iiiii...i',
+  'iiiii..i.',
+  '.iiii.i.i',
+  '..iii....',
+  '...ii....',
+];
+
 export function makeSprite(rows, overrides = null) {
   const colors = overrides ? { ...BASE_COLORS, ...overrides } : BASE_COLORS;
   const w = Math.max(...rows.map((r) => r.length));
@@ -556,6 +603,7 @@ export const SPRITES = {
   palmB: makeSprite(PALM_B),
   gullA: makeSprite(GULL_A),
   gullB: makeSprite(GULL_B),
+
 };
 
 /** Draw a sprite rotated about a pivot, snapped to whole pixels. */
@@ -566,4 +614,27 @@ export function drawRotated(ctx, sprite, x, y, angle, pivot, flip = false) {
   if (flip) ctx.scale(-1, 1);
   ctx.drawImage(sprite, -pivot.x, -pivot.y);
   ctx.restore();
+}
+
+const ICON_GRIDS = {
+  noteOn: NOTE_ON, noteOff: NOTE_OFF,
+  speakerOn: SPEAKER_ON, speakerOff: SPEAKER_OFF,
+};
+
+export const ICONS = {};
+for (const name in ICON_GRIDS) {
+  const rows = ICON_GRIDS[name];
+  const px = [];
+  rows.forEach((row, y) => {
+    for (let x = 0; x < row.length; x++) if (row[x] === 'i') px.push([x, y]);
+  });
+  ICONS[name] = { px, w: Math.max(...rows.map((r) => r.length)), h: rows.length };
+}
+
+/** Draw one HUD icon in a given colour, top-left at x,y. */
+export function drawIcon(ctx, name, x, y, color) {
+  const icon = ICONS[name];
+  if (!icon) return;
+  ctx.fillStyle = color;
+  for (const [gx, gy] of icon.px) ctx.fillRect(x + gx, y + gy, 1, 1);
 }
