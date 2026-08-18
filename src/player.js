@@ -2,6 +2,10 @@ import { LANES, laneY, PLAYER_X, TUNE, PAL } from './config.js';
 import { SURFER_PIVOT, drawRotated } from './sprites.js';
 import { characterSprites } from './characters.js';
 
+// Paddle, paddle, crouch, stand. Long enough to read, short enough not to
+// hold up the start of a run.
+const RISE_TIME = 0.9;
+
 /** A filled disc, or just its outline when `outline` is set. */
 function glow(ctx, cx, cy, r, alpha, color, outline = false) {
   ctx.globalAlpha = alpha;
@@ -16,6 +20,13 @@ function glow(ctx, cx, cy, r, alpha, color, outline = false) {
     }
   }
   ctx.globalAlpha = 1;
+}
+
+/** Prone and paddling, then a crouch, then upright. */
+function risePose(left, t) {
+  if (left > RISE_TIME * 0.45) return Math.floor(t * 6) % 2 ? 'paddleB' : 'paddleA';
+  if (left > RISE_TIME * 0.18) return 'rise';
+  return 'ride';
 }
 
 export class Player {
@@ -40,13 +51,15 @@ export class Player {
   reset() {
     this.lane = 2;
     this.laneF = 2;
-    this.state = 'ride';
+    this.state = 'rising';
+    this.riseT = RISE_TIME;
     this.timer = 0;
     this.airT = 0;
     this.airHeight = 0;
     this.angle = 0;
     this.lives = this.maxLives;
-    this.invuln = 0;
+    // Nothing can touch you while you are still getting to your feet.
+    this.invuln = RISE_TIME;
     this.boost = 1;
     this.boosting = false;
     this.shield = !!this.mods.freeShield;
@@ -64,6 +77,7 @@ export class Player {
 
   moveLane(dir) {
     if (this.state === 'stagger' || this.state === 'wipe') return false;
+    if (this.state === 'rising' && this.riseT > RISE_TIME * 0.45) return false;
     const next = Math.max(0, Math.min(LANES - 1, this.lane + dir));
     if (next === this.lane) return false;
     this.lane = next;
@@ -116,6 +130,10 @@ export class Player {
     if (this.drift > 0) this.drift = Math.max(0, this.drift - 26 * dt);
 
     switch (this.state) {
+      case 'rising':
+        this.riseT -= dt;
+        if (this.riseT <= 0) { this.state = 'ride'; this.riseT = 0; }
+        break;
       case 'air': {
         this.airT -= dt;
         const p = 1 - Math.max(0, this.airT) / TUNE.rampAir;
@@ -149,6 +167,7 @@ export class Player {
 
   emitSpray(dt, speed01) {
     if (this.state === 'air' || this.state === 'wipe') return;
+    if (this.state === 'rising' && this.riseT > RISE_TIME * 0.45) return;
     const rate = (this.boosting ? 44 : 16) * (0.4 + speed01);
     this.spawnRate = (this.spawnRate || 0) + rate * dt;
     while (this.spawnRate >= 1) {
@@ -199,10 +218,12 @@ export class Player {
     }
 
     // Blink through the post-hit invulnerability.
-    if (this.invuln > 0 && this.state !== 'wipe' && Math.floor(t * 18) % 2 === 0) return;
+    if (this.invuln > 0 && this.state !== 'wipe' && this.state !== 'rising'
+        && Math.floor(t * 18) % 2 === 0) return;
 
     let pose = 'ride';
-    if (this.state === 'air') pose = 'air';
+    if (this.state === 'rising') pose = risePose(this.riseT, t);
+    else if (this.state === 'air') pose = 'air';
     else if (this.state === 'wipe' || this.state === 'stagger') pose = 'wipe';
     else if (this.boosting) pose = 'tuck';
 

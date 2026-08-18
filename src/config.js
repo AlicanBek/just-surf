@@ -53,6 +53,9 @@ export const PAL = {
   bwMint:   '#7fe6bd',
   bwFoam:   '#ffffff',
   bwFoamSh: '#c9eef0',
+  tubeIn:   '#06263c',
+  tubeMid:  '#0c4165',
+  tubeRim:  '#b6ecfb',
 
   foam:     '#ffffff',
   foamSh:   '#cfeef0',
@@ -86,15 +89,15 @@ export const TUNE = {
   foamStart:    86,
   foamRamp:     2.6,
   foamSpeedMax: 320,
-  // Close enough that the wave itself is always on screen. Its distance is the
-  // danger readout, so it has to be something you can actually look at.
-  foamLeash:    44,
-  foamSurge:    12,     // px it nudges forward on every hit
-  foamBite:     8,
+  // Back to the original spacing: it sits well behind you when you are riding
+  // clean and only looms into view once you are in trouble.
+  foamLeash:    132,
+  foamSurge:    34,     // px it lunges forward on every hit
+  foamBite:     10,
 
   // HIGH TIDE: fills as you collect, then triples the value of everything you
   // pick up for a few seconds.
-  tideNeed:     16,
+  tideNeed:     20,
   tideTime:     7,
   tideMul:      3,
 

@@ -112,7 +112,7 @@ export class Field {
       return;
     }
 
-    if (roll < 0.27) {
+    if (roll < 0.27 && Math.random() < 0.75) {
       // Ice cream, boxed in on both sides. The best pickup in the game should
       // never be free.
       const lane = 1 + Math.floor(Math.random() * (LANES - 2));

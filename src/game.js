@@ -12,15 +12,15 @@ import { ROSTER, getCharacter, loadSave, writeSave, characterSprites } from './c
 import { BTN, drawPad, drawHud, panel, button, meter } from './ui.js';
 
 const R = {
-  play:     { x: 112, y: 154, w: 96, h: 22 },
-  surfers:  { x: 8,   y: 156, w: 76, h: 18 },
-  sound:    { x: 282, y: 156, w: 30, h: 18 },
-  prev:     { x: 8,   y: 76,  w: 24, h: 30 },
-  next:     { x: 96,  y: 76,  w: 24, h: 30 },
-  action:   { x: 176, y: 154, w: 136, h: 22 },
-  back:     { x: 8,   y: 154, w: 68,  h: 22 },
-  retry:    { x: 52,  y: 150, w: 96, h: 24 },
-  toShop:   { x: 172, y: 150, w: 96, h: 24 },
+  play:     { x: 112, y: 154, w: 96,  h: 22 },
+  surfers:  { x: 8,   y: 156, w: 76,  h: 18 },
+  sound:    { x: 282, y: 156, w: 30,  h: 18 },
+  prev:     { x: 8,   y: 74,  w: 22,  h: 30 },
+  next:     { x: 88,  y: 74,  w: 22,  h: 30 },
+  action:   { x: 168, y: 152, w: 144, h: 24 },
+  back:     { x: 8,   y: 152, w: 74,  h: 24 },
+  retry:    { x: 44,  y: 150, w: 112, h: 24 },
+  toShop:   { x: 164, y: 150, w: 112, h: 24 },
 };
 
 export class Game {
@@ -382,7 +382,9 @@ export class Game {
     ctx.drawImage(SPRITES.shell, 158, 104);
     drawText(ctx, String(this.save.shells), 169, 105, { color: PAL.hud });
 
-    drawRotated(ctx, characterSprites(ch.id).ride, 74, laneY(2), 0, SURFER_PIVOT);
+    // Waiting out the back, paddling.
+    const paddling = Math.floor(this.t * 3) % 2 ? 'paddleB' : 'paddleA';
+    drawRotated(ctx, characterSprites(ch.id)[paddling], 74, laneY(2), 0, SURFER_PIVOT);
 
     button(ctx, R.play, 'PADDLE OUT', { active: true, scale: 1 });
     button(ctx, R.surfers, 'SURFERS');
@@ -391,7 +393,7 @@ export class Game {
 
   drawShop(ctx) {
     this.drawWorld(ctx);
-    ctx.globalAlpha = 0.55;
+    ctx.globalAlpha = 0.6;
     ctx.fillStyle = PAL.ink;
     ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = 1;
@@ -401,88 +403,101 @@ export class Game {
     const selected = this.save.selected === ch.id;
     const afford = this.save.shells >= ch.cost;
 
-    drawText(ctx, 'SURFERS', 8, 8, { scale: 2, color: PAL.hud, outline: PAL.ink });
-    ctx.drawImage(SPRITES.shell, W - 58, 8);
-    drawText(ctx, String(this.save.shells), W - 8, 9, {
-      align: 'right', scale: 2, color: PAL.accent, shadow: PAL.ink,
+    drawText(ctx, 'SURFERS', 8, 6, { scale: 2, color: PAL.hud, outline: PAL.ink });
+    ctx.drawImage(SPRITES.shell, W - 78, 7);
+    drawText(ctx, String(this.save.shells), W - 8, 6, {
+      align: 'right', scale: 2, color: PAL.accent, outline: PAL.ink,
     });
 
-    // Preview, drawn at double size so the palette actually reads.
-    panel(ctx, 8, 34, 112, 108, 0.7);
+    // Preview, at double size so the palette reads.
+    panel(ctx, 8, 26, 104, 118, 0.7);
     const art = characterSprites(ch.id).ride;
     const bob = Math.round(Math.sin(this.t * 2.5) * 2);
     ctx.drawImage(
       art, 0, 0, art.width, art.height,
-      64 - SURFER_PIVOT.x * 2, 108 + bob - SURFER_PIVOT.y * 2,
+      60 - SURFER_PIVOT.x * 2, 104 + bob - SURFER_PIVOT.y * 2,
       art.width * 2, art.height * 2,
     );
     ctx.fillStyle = PAL.laneEdge;
-    ctx.fillRect(26, 108 + bob, 76, 1);
-    drawText(ctx, `${this.browse + 1}/${ROSTER.length}`, 64, 128, {
+    ctx.fillRect(22, 104 + bob, 76, 1);
+    drawText(ctx, `${this.browse + 1} / ${ROSTER.length}`, 60, 132, {
       align: 'center', color: PAL.foamSh,
     });
-    button(ctx, R.prev, '<', { scale: 1 });
-    button(ctx, R.next, '>', { scale: 1 });
+    button(ctx, R.prev, '<', { scale: 2 });
+    button(ctx, R.next, '>', { scale: 2 });
 
-    panel(ctx, 128, 34, 184, 108);
-    drawText(ctx, ch.name, 136, 42, { scale: 2, color: owned ? PAL.accent : PAL.hud });
-    drawText(ctx, ch.blurb, 136, 62, { color: PAL.foamSh });
-    drawText(ctx, 'PERK', 136, 78, { color: PAL.foamSh });
-    drawText(ctx, ch.perk, 136, 90, { color: PAL.good });
+    panel(ctx, 120, 26, 192, 118);
+    drawText(ctx, ch.name, 130, 33, { scale: 2, color: owned ? PAL.accent : PAL.hud });
+    drawText(ctx, ch.blurb, 130, 53, { color: PAL.foamSh });
+
+    drawText(ctx, 'PERK', 130, 70, { color: PAL.foamSh });
+    drawText(ctx, ch.perk, 130, 82, { color: PAL.good });
 
     if (owned) {
-      drawText(ctx, selected ? 'RIDING NOW' : 'UNLOCKED', 136, 112, {
-        color: selected ? PAL.tide : PAL.hud,
+      drawText(ctx, selected ? 'RIDING NOW' : 'UNLOCKED', 130, 106, {
+        scale: 2, color: selected ? PAL.tide : PAL.hud,
       });
     } else {
-      drawText(ctx, 'COST', 136, 112, { color: PAL.foamSh });
-      drawText(ctx, `${ch.cost} SHELLS`, 172, 112, { color: afford ? PAL.accent : PAL.bad });
-      meter(ctx, 136, 126, 168, 4, this.save.shells / ch.cost, afford ? PAL.accent : PAL.bad);
+      drawText(ctx, 'COST', 130, 102, { color: PAL.foamSh });
+      ctx.drawImage(SPRITES.shell, 160, 100);
+      drawText(ctx, String(ch.cost), 173, 102, { color: afford ? PAL.accent : PAL.bad });
+      meter(ctx, 130, 116, 172, 5, this.save.shells / ch.cost, afford ? PAL.accent : PAL.bad);
+      drawText(ctx, `YOU HAVE ${this.save.shells}`, 302, 124, {
+        align: 'right', color: PAL.foamSh,
+      });
     }
 
     const label = owned ? (selected ? 'READY' : 'RIDE THIS ONE')
-      : afford ? `UNLOCK  ${ch.cost}` : 'NOT ENOUGH SHELLS';
-    button(ctx, R.action, label, { active: owned ? !selected : afford, dim: !owned && !afford });
-    button(ctx, R.back, 'BACK');
+      : afford ? 'UNLOCK' : 'NOT ENOUGH SHELLS';
+    button(ctx, R.action, label, {
+      active: owned ? !selected : afford, dim: !owned && !afford,
+      scale: owned && selected ? 1 : afford || owned ? 2 : 1,
+    });
+    button(ctx, R.back, 'BACK', { scale: 1 });
 
     if (this.notice > 0) {
       drawText(ctx, 'GO COLLECT MORE SHELLS!', W / 2, 146, {
-        align: 'center', color: PAL.bad, shadow: PAL.ink,
+        align: 'center', color: PAL.bad, outline: PAL.ink,
       });
     }
   }
 
   drawOver(ctx) {
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.55;
     ctx.fillStyle = PAL.ink;
     ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = 1;
 
-    panel(ctx, 44, 22, 232, 118);
-    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 30, {
+    panel(ctx, 40, 18, 240, 124);
+
+    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 25, {
       scale: 3, align: 'center', color: PAL.bad, outline: PAL.ink,
     });
 
-    drawText(ctx, String(Math.floor(this.score)), W / 2, 56, {
-      scale: 3, align: 'center', color: PAL.hud, outline: PAL.ink,
+    // The score gets the most room on the screen; the label sits under it.
+    drawText(ctx, String(Math.floor(this.score)), W / 2, 50, {
+      scale: 4, align: 'center', color: PAL.hud, outline: PAL.ink,
     });
-    drawText(ctx, 'SCORE', W / 2, 78, { align: 'center', color: PAL.foamSh });
+    drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
 
-    drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 60, 94, { color: PAL.hud });
-    ctx.drawImage(SPRITES.shell, 60, 106);
-    drawText(ctx, `+${this.earned}`, 72, 107, { color: PAL.accent });
+    // Two columns: what you did on the left, your standing on the right.
+    drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 98, { color: PAL.hud });
+    ctx.drawImage(SPRITES.shell, 52, 110);
+    drawText(ctx, `+${this.earned} SHELLS`, 65, 112, { color: PAL.accent });
 
     if (this.newBest) {
       const flash = Math.floor(this.t * 6) % 2 === 0;
-      drawText(ctx, 'NEW BEST!', 260, 94, {
+      drawText(ctx, 'NEW BEST!', 268, 98, {
         align: 'right', color: flash ? PAL.accent : PAL.foam,
       });
     } else {
-      drawText(ctx, `BEST ${this.save.best}`, 260, 94, { align: 'right', color: PAL.foamSh });
+      drawText(ctx, `BEST ${this.save.best}`, 268, 98, { align: 'right', color: PAL.foamSh });
     }
-    drawText(ctx, `TOTAL ${this.save.shells}`, 260, 107, { align: 'right', color: PAL.foamSh });
+    drawText(ctx, `TOTAL ${this.save.shells}`, 268, 112, {
+      align: 'right', color: PAL.foamSh,
+    });
 
-    button(ctx, R.retry, 'AGAIN', { active: true });
-    button(ctx, R.toShop, 'SURFERS');
+    button(ctx, R.retry, 'AGAIN', { active: true, scale: 2 });
+    button(ctx, R.toShop, 'SURFERS', { scale: 1 });
   }
 }

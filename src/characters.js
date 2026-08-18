@@ -46,7 +46,7 @@ export const ROSTER = [
     perk: 'HIGH TIDE FILLS FASTER',
     cost: 1800,
     colors: { w: '#0d5c6e', W: '#17a0b8', b: '#f2fbff', r: '#00d0a4', h: '#2b1d13' },
-    mods: { tideNeed: 10 },
+    mods: { tideNeed: 12 },
   },
   {
     id: 'legend',

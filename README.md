@@ -24,11 +24,10 @@ the way, hoover up shells, and keep ahead of the foam.
   pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 36 shells.
   It is a payout, not a shield: obstacles still hurt.
 
-Three hits ends the run — but so does the wave behind you. It sits at the left
-of the screen the whole time and runs to its own clock, ramping faster than your
-cruising speed, so from about half a minute in the only thing keeping you ahead
-is how well you spend the boost. Its distance from you is the danger readout, so
-it is always something you can look at rather than a number.
+Three hits ends the run — but so does the whitewater behind you. It runs to its
+own clock and ramps faster than your cruising speed, so from about half a minute
+in the only thing keeping you ahead is how well you spend the boost. It stays
+well back while you ride clean and rears into view once you start taking hits.
 
 ## Controls
 
@@ -80,7 +79,7 @@ Sound is synthesised on the fly with WebAudio.
 | `src/game.js` | State machine, collisions, scoring, every screen |
 | `src/player.js` | Lane movement, boost, air, hit and wipeout states |
 | `src/entities.js` | Obstacle and pickup definitions, and the row spawner |
-| `src/bigwave.js` | The wave chasing you: crest, curling lip, foam claws, spray |
+| `src/bigwave.js` | The whitewater chasing you, and its curling lip |
 | `src/ocean.js` | The five lanes and the water |
 | `src/scene.js` | Sunset sky, sun and rays, clouds, the island, gulls, the dolphin |
 | `src/sprites.js` | Every sprite, as character grids |
@@ -95,9 +94,12 @@ boost drain, barrel length and lane-switch time are all there.
 
 The screen is carved up vertically: sunset sky down to the horizon, then the five
 rideable lanes, then foreground water where the thumb buttons sit. Those bounds
-all come from `src/config.js`, so moving them moves everything. The big wave is
-not a band of its own — it rises out of the left edge and towers up through the
-sky, and how far onto the screen it has come is how much trouble you are in.
+all come from `src/config.js`, so moving them moves everything. The whitewater is
+not a band of its own — it rises out of the left edge, and how far onto the
+screen it has come is how much trouble you are in.
+
+Runs open with the surfer prone and paddling, then a crouch, then upright: three
+frames over 0.9 seconds, invulnerable until they are on their feet.
 
 `window.surf` is exposed for poking at a running game from the console.
 `surf.step(120)` advances 120 frames by hand and `surf.pause()` / `surf.resume()`
