@@ -23,7 +23,7 @@ export const ROSTER = [
   {
     id: 'beyzos',
     name: 'BEYZOS MILOR',
-    blurb: 'ONE BITE AND SHE KNOWS',
+    blurb: 'READS THE SEA LIKE A MENU',
     perk: 'IMMUNE TO SHARKS',
     cost: 150,
     colors: {
