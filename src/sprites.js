@@ -183,6 +183,8 @@ const WIPE = [
   '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
+// Catch: the arm sweeps forward and down, hand entering the water
+// ahead of the nose.
 const PADDLE_A = [
   '..............................',
   '..............................',
@@ -204,16 +206,19 @@ const PADDLE_A = [
   '..................hhhhhh......',
   '.................hhhssss......',
   '..........sssssssssssSs.......',
-  '......sswwwwwwssssssss........',
-  '...sssssswwwwwwwsssss.........',
-  '..sssssss.wwwww.....ss........',
-  '...ssss..............sss......',
+  '......sswwwwwwssssssss.s......',
+  '...sssssswwwwwwwsssss..ss.....',
+  '..sssssss.wwwww.........ss....',
+  '...ssss..................ss...',
   '...bbbbbbbbbbbbbbbbbbbbbb.....',
   '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
   'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
   '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
+// Recovery: the hand is carried forward at shoulder height. It used to
+// reach four rows above the head, which read as an arm thrown straight up
+// rather than a stroke.
 const PADDLE_B = [
   '..............................',
   '..............................',
@@ -227,15 +232,15 @@ const PADDLE_B = [
   '..............................',
   '..............................',
   '..............................',
-  '..........................ss..',
-  '.........................ss...',
-  '........................ss....',
-  '.......................ss.....',
-  '....................hhss......',
+  '..............................',
+  '..............................',
+  '..............................',
+  '..............................',
+  '....................hh........',
   '..................hhhhhh......',
-  '.................hhhssss......',
-  '..........sssssssssssSs.......',
-  '......sswwwwwwssssssss........',
+  '.................hhhssss...ss.',
+  '..........sssssssssssSs.ss....',
+  '......sswwwwwwssssssss.s......',
   '...sssssswwwwwwwsssss.........',
   '..sssssss.wwwww...............',
   '...ssss.......................',
