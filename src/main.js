@@ -11,7 +11,13 @@ const sfx = new Sfx();
 const input = new Input();
 const game = new Game(sfx, input);
 
-input.onFirstInput = () => sfx.start();
+// Every press, not just the first. A context can be suspended again by the
+// browser at any point -- a hidden tab, a call arriving on a phone -- and
+// start() is idempotent, so this quietly recovers instead of going silent for
+// the rest of the session. Capture phase, so it runs before the game reacts.
+for (const ev of ['pointerdown', 'keydown']) {
+  addEventListener(ev, () => sfx.start(), { capture: true });
+}
 input.mapPoint = (cx, cy) => {
   const r = canvas.getBoundingClientRect();
   return [((cx - r.left) / r.width) * W, ((cy - r.top) / r.height) * H];

@@ -137,9 +137,14 @@ The music is one sixteen-second tropical loop — steel pan over a tresillo bass
 off-beat chord stabs, congas and a sixteenth shaker — synthesised into a single
 buffer at startup and played with `loop = true`. Rendering it once rather than
 scheduling note by note makes the seam sample-accurate and immune to a throttled
-timer in a background tab. It is built on a `setTimeout` off the first tap,
-because rendering blocks for a few hundred milliseconds and that tap should not
-be the frame that stalls. The bass sits at C3 rather than C2: an octave lower is
+timer in a background tab. It is built on a `setTimeout` off the first press,
+because rendering blocks for a few hundred milliseconds and that press should not
+be the frame that stalls. That timeout is also why `start()` plays a one-sample
+silent buffer synchronously: iOS keeps the output shut until a sound started
+inside a user gesture has played, and one started from a timer does not count,
+so without it the music stayed silent until the first one-shot of a run opened
+the output. `start()` runs on every press, not just the first, so a context the
+browser suspends behind our back recovers instead of going quiet for good. The bass sits at C3 rather than C2: an octave lower is
 below what a phone speaker reproduces.
 
 `tools/make-icons.py` redraws the app icons. It reads the sprite rows and

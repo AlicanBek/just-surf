@@ -102,15 +102,20 @@ export class Sfx {
     this.rumble = null;
   }
 
-  // Browsers only allow audio after a gesture, so this is called on first input.
+  // Browsers only allow audio after a gesture, so this is called from a press.
+  // Safe to call on every press: after the first it just resumes a context the
+  // browser has suspended behind our back.
   start() {
     if (this.ctx) {
       if (this.ctx.state === 'suspended') this.ctx.resume();
+      this._unlock();
       return;
     }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     this.ctx = new AC();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    this._unlock();
 
     const len = Math.floor(this.ctx.sampleRate * 2);
     this.noise = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
@@ -135,8 +140,27 @@ export class Sfx {
     setTimeout(() => this._startMusic(), 0);
   }
 
+  /**
+   * iOS keeps the output shut until a sound that was started inside a user
+   * gesture has played, and it does not count one started from a timer. The
+   * music buffer is rendered on a timeout to keep the first press cheap, so
+   * without this it stayed silent until the first one-shot of a run opened the
+   * output. A single silent sample, started synchronously here, is enough.
+   */
+  _unlock() {
+    try {
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.ctx.createBuffer(1, 1, this.ctx.sampleRate);
+      src.connect(this.ctx.destination);
+      src.start(0);
+    } catch {
+      // Nothing to recover from: this is only ever a hint to the platform.
+    }
+  }
+
   _startMusic() {
     if (!this.ctx || this.music) return;
+    if (this.ctx.state === 'suspended') this.ctx.resume();
     const gain = this.ctx.createGain();
     gain.gain.value = this.musicOn ? MUSIC_VOL : 0;
     gain.connect(this.ctx.destination);

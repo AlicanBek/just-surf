@@ -14,7 +14,6 @@ export class Input {
     this.pointers = new Map();   // pointerId -> { x, y } in internal pixels
     this.taps = [];              // presses that landed this frame
     this.mapPoint = (cx, cy) => [cx, cy];
-    this.onFirstInput = null;
   }
 
   attach(canvas) {
@@ -24,7 +23,6 @@ export class Input {
       e.preventDefault();
       if (!this.keys.has(a)) this.keyHits.add(a);
       this.keys.add(a);
-      this._woke();
     }, { passive: false });
 
     addEventListener('keyup', (e) => {
@@ -44,7 +42,6 @@ export class Input {
       e.preventDefault();
       const p = put(e);
       this.taps.push(p);
-      this._woke();
     });
     canvas.addEventListener('pointermove', (e) => {
       if (this.pointers.has(e.pointerId)) put(e);
@@ -56,9 +53,6 @@ export class Input {
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
-  _woke() {
-    if (this.onFirstInput) { this.onFirstInput(); this.onFirstInput = null; }
-  }
 
   held(action) { return this.keys.has(action); }
   hit(action) { return this.keyHits.has(action); }
