@@ -4,14 +4,15 @@ import { SPRITES } from './sprites.js';
 // w/h are the hitbox, centred on the lane line. `base` is how far below the
 // lane line the sprite's bottom edge sits, so things look like they float.
 const KINDS = {
-  rock:  { sprite: 'rock',  w: 14, h: 9,  base: 6, solid: true },
-  buoy:  { sprite: 'buoy',  w: 8,  h: 9,  base: 6, solid: true },
-  log:   { sprite: 'log',   w: 22, h: 8,  base: 5, solid: true },
-  shark: { sprite: 'shark', w: 13, h: 8,  base: 8, solid: true, drifts: true },
-  shell: { sprite: 'shell', w: 10, h: 10, base: 5, pickup: 'shell' },
-  pearl: { sprite: 'pearl', w: 10, h: 10, base: 4, pickup: 'pearl' },
-  heart: { sprite: 'heart', w: 10, h: 10, base: 4, pickup: 'heart' },
-  ramp:  { sprite: 'ramp',  w: 14, h: 10, base: 6, ramp: true },
+  rock:     { sprite: 'rock',     w: 14, h: 9,  base: 6, solid: true },
+  buoy:     { sprite: 'buoy',     w: 8,  h: 9,  base: 6, solid: true },
+  log:      { sprite: 'log',      w: 22, h: 8,  base: 5, solid: true },
+  shark:    { sprite: 'shark',    w: 16, h: 9,  base: 7, solid: true, drifts: true, chomps: true },
+  shell:    { sprite: 'shell',    w: 10, h: 10, base: 5, pickup: 'shell' },
+  pearl:    { sprite: 'pearl',    w: 10, h: 10, base: 4, pickup: 'pearl' },
+  icecream: { sprite: 'icecream', w: 11, h: 11, base: 6, pickup: 'icecream' },
+  heart:    { sprite: 'heart',    w: 10, h: 10, base: 4, pickup: 'heart' },
+  ramp:     { sprite: 'ramp',     w: 15, h: 10, base: 6, ramp: true },
 };
 
 export const OBSTACLES = ['rock', 'buoy', 'log', 'rock', 'shark'];
@@ -49,6 +50,10 @@ export class Field {
       e.dir = Math.random() < 0.5 ? -1 : 1;
       e.timer = 0.4 + Math.random() * 0.6;
     }
+    if (k.chomps) {
+      e.chomp = 0.6 + Math.random() * 2.2;
+      e.gaping = false;
+    }
     this.items.push(e);
     return e;
   }
@@ -62,6 +67,13 @@ export class Field {
           e.timer = 0.55 + Math.random() * 0.5;
           if (e.lane + e.dir < 0 || e.lane + e.dir > LANES - 1) e.dir *= -1;
           e.lane += e.dir;
+        }
+      }
+      if (e.k.chomps) {
+        e.chomp -= dt;
+        if (e.chomp <= 0) {
+          e.gaping = !e.gaping;
+          e.chomp = e.gaping ? 0.7 + Math.random() * 0.5 : 1.4 + Math.random() * 2.2;
         }
       }
       e.laneF += (e.lane - e.laneF) * Math.min(1, dt * 7);
@@ -97,6 +109,17 @@ export class Field {
           lane = Math.max(0, Math.min(LANES - 1, lane + (Math.random() < 0.5 ? -1 : 1)));
         }
       }
+      return;
+    }
+
+    if (roll < 0.27) {
+      // Ice cream, boxed in on both sides. The best pickup in the game should
+      // never be free.
+      const lane = 1 + Math.floor(Math.random() * (LANES - 2));
+      this.spawn('icecream', lane, x);
+      this.spawn(pick(OBSTACLES), lane - 1, x);
+      this.spawn(pick(OBSTACLES), lane + 1, x);
+      this.spawn(pick(OBSTACLES), lane, x + 74);
       return;
     }
 
@@ -137,7 +160,8 @@ export class Field {
       const y = laneY(e.laneF);
       const bob = e.k.pickup ? Math.round(Math.sin(e.bob) * 1.5) : 0;
       const top = Math.round(y + e.k.base - e.sprite.height + bob);
-      ctx.drawImage(e.sprite, Math.round(sx - e.sprite.width / 2), top);
+      const art = e.k.chomps && !e.gaping ? SPRITES.sharkShut : e.sprite;
+      ctx.drawImage(art, Math.round(sx - art.width / 2), top);
     }
   }
 }

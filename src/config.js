@@ -4,11 +4,12 @@ export const W = 320;
 export const H = 180;
 
 // Vertical budget, top to bottom:
-//   0..28    clean sky, with the sun, an island and the HUD over it
-//   28..64   the barrel: a big wave standing behind the whole playfield
+//   0..64    sunset sky: sun, rays, clouds, a volcanic island on the horizon
 //   64..154  five lanes of rideable water
 //   154..180 foreground water, where the thumb buttons sit
-export const HORIZON = 28;
+// The big wave is not a band of its own: it rises out of the left edge and
+// chases the player up through the sky.
+export const HORIZON = 64;
 
 export const LANES = 5;
 export const LANE_TOP = 64;
@@ -20,48 +21,48 @@ export const laneY = (i) => LANE_TOP + i * LANE_H + Math.floor(LANE_H / 2);
 export const PLAYER_X = 74;
 
 export const PAL = {
-  // Sky is a smooth vertical ramp between these three stops. No banding.
-  skyTop:   '#2b78bd',
-  skyMid:   '#7ec6e8',
-  skyLow:   '#d7f1fb',
-  sun:      '#fff6cf',
-  sunGlow:  '#ffdf8e',
-  cloud:    '#ffffff',
-  cloudSh:  '#cfe6f5',
-  island:   '#2c6b57',
-  islandDk: '#1b4839',
-  islandLt: '#3f8f6c',
-  islandSand: '#e6d7a8',
+  // Sunset: lavender overhead down through orchid and pink to a pale haze.
+  skyTop:   '#8b7fd0',
+  skyMid:   '#d885c8',
+  skyLow:   '#f79ac4',
+  skyHaze:  '#ffc9d8',
+  ray:      '#ffb2d4',
+  sun:      '#fff2d8',
+  sunEdge:  '#ffd9a8',
+  cloud:    '#ffdcea',
+  cloudSh:  '#e9a6c8',
+  // Volcanic island, silhouetted against the sunset.
+  island:   '#7a4fa8',
+  islandDk: '#5a3580',
+  islandLt: '#9a6cc4',
+  islandSnow: '#efe4fb',
 
-  // The barrel standing behind the lanes.
-  waveLip:   '#ffffff',
-  waveEdge:  '#9fe1f5',
-  waveGlass: '#6fd8f0',
-  // Shadow thrown by the overhanging lip. This is what makes the wave read
-  // as pitching over rather than as a flat blue stripe.
-  waveShadow: '#072f4d',
-  waveFace: ['#5cbde6', '#2f9ad0', '#1c78b4', '#155f96'],
-  waveWash:  '#dff4fd',
-  tubeIn:    '#06263c',
-  tubeMid:   '#0c4165',
-  tubeRim:   '#b6ecfb',
+  // Water stays deep blue with white and mint foam, the way the reference
+  // handles blue water under a pink sky.
+  lane:      ['#0d3660', '#114679', '#165893', '#1c6dae', '#2283c6'],
+  laneShade: ['#0a2a4e', '#0d3a66', '#124b80', '#175d99', '#1c72b0'],
+  glintFar:  '#26688f',
+  glintNear: '#4fc9a6',
+  laneEdge:  '#b8f4dc',
+  mint:      '#7fe6bd',
 
-  // Lane water, far (top) to near (bottom). Brighter as it comes toward you.
-  lane:      ['#0b3a63', '#0f4a7a', '#145d95', '#1a72b0', '#2189cb'],
-  laneShade: ['#082e50', '#0b3c66', '#104d7d', '#155f95', '#1a73ad'],
-  glintFar:  '#1d5c8a',
-  glintNear: '#3d92c4',
-  laneEdge:  '#8ddcf7',
+  // The big wave chasing from behind.
+  bwDeep:   '#0a2a4e',
+  bwMid:    '#12457a',
+  bwLight:  '#2074b0',
+  bwMint:   '#7fe6bd',
+  bwFoam:   '#ffffff',
+  bwFoamSh: '#c9eef0',
 
   foam:     '#ffffff',
-  foamSh:   '#c9edfb',
-  shore:    '#0a3557',
-  ink:      '#07202f',
+  foamSh:   '#cfeef0',
+  shore:    '#0a3050',
+  ink:      '#0b1a2e',
   hud:      '#ffffff',
   accent:   '#ffcf4a',
   bad:      '#ff6b57',
   good:     '#7ff0a8',
-  barrel:   '#8be8ff',
+  tide:     '#8fe8ff',
 };
 
 export const TUNE = {
@@ -79,19 +80,23 @@ export const TUNE = {
   rampAir:      1.05,   // seconds of air off a wave lip
   rampHeight:   28,
 
-  // The whitewater runs at its own pace. Note the ramp is steeper than
-  // speedRamp: past about half a minute the foam is quicker than your cruising
+  // The big wave runs at its own pace. Note the ramp is steeper than
+  // speedRamp: past about half a minute it is quicker than your cruising
   // speed, so late runs live or die on the boost.
   foamStart:    86,
   foamRamp:     2.6,
   foamSpeedMax: 320,
-  foamLeash:    132,    // it never trails off further than this
-  foamSurge:    34,     // px it lunges forward on every hit
-  foamBite:     10,
+  // Close enough that the wave itself is always on screen. Its distance is the
+  // danger readout, so it has to be something you can actually look at.
+  foamLeash:    44,
+  foamSurge:    12,     // px it nudges forward on every hit
+  foamBite:     8,
 
-  barrelNeed:   28,     // shells needed to fill the barrel meter
-  barrelTime:   6,
-  barrelMul:    3,
+  // HIGH TIDE: fills as you collect, then triples the value of everything you
+  // pick up for a few seconds.
+  tideNeed:     16,
+  tideTime:     7,
+  tideMul:      3,
 
   metersPerPx:  0.1,
 };

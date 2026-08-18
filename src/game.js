@@ -4,8 +4,8 @@ import {
 import { drawText } from './font.js';
 import { SPRITES, SURFER_PIVOT, drawRotated } from './sprites.js';
 import { Scene } from './scene.js';
-import { drawOcean, drawFoamWall } from './ocean.js';
-import { drawWave } from './wave.js';
+import { drawOcean } from './ocean.js';
+import { drawBigWave } from './bigwave.js';
 import { Field } from './entities.js';
 import { Player } from './player.js';
 import { ROSTER, getCharacter, loadSave, writeSave, characterSprites } from './characters.js';
@@ -152,7 +152,6 @@ export class Game {
     const base = Math.min(TUNE.maxSpeed, TUNE.startSpeed + this.elapsed * TUNE.speedRamp);
     let sp = base;
     if (p.boosting) sp *= TUNE.boostMul;
-    if (p.barrelT > 0) sp *= 1.12;
     if (p.state === 'stagger') sp *= 0.55;
     if (fatal) sp *= Math.max(0, 1 - this.wipeT * 1.5);
     this.speed = sp;
@@ -174,10 +173,9 @@ export class Game {
 
     if (!fatal) {
       this.collide(px);
-      const mult = p.barrelT > 0 ? TUNE.barrelMul : 1;
       const metres = sp * dt * TUNE.metersPerPx;
       this.dist += metres;
-      this.score += metres * mult;
+      this.score += metres;
     }
 
     // The whitewater, running to its own clock.
@@ -205,30 +203,46 @@ export class Game {
 
       if (e.k.pickup) {
         e.dead = true;
-        if (e.kind === 'shell') {
-          this.runShells += 1;
-          p.barrel += 1;
-          this.score += 12;
-          this.sfx.trick(Math.min(5, Math.floor(p.barrel / 6)));
-        } else if (e.kind === 'pearl') {
-          this.runShells += 5;
-          p.barrel += 3;
-          this.score += 60;
-          this.float('PEARL', sx, laneY(e.laneF) - 16, PAL.barrel);
-          this.sfx.trick(5);
-        } else if (e.kind === 'heart') {
+        const mult = p.tideT > 0 ? TUNE.tideMul : 1;
+        const ey = laneY(e.laneF) - 16;
+
+        if (e.kind === 'heart') {
           if (p.lives < p.maxLives) {
             p.lives += 1;
-            this.float('+1 LIFE', sx, laneY(e.laneF) - 16, PAL.bad);
+            this.float('+1 LIFE', sx, ey, PAL.bad);
           } else {
-            this.score += 120;
-            this.float('+120', sx, laneY(e.laneF) - 16, PAL.accent);
+            this.score += 120 * mult;
+            this.float(`+${120 * mult}`, sx, ey, PAL.accent);
           }
           this.sfx.trick(4);
+          continue;
         }
-        if (p.barrel >= p.barrelNeed && p.barrelT <= 0) {
-          p.startBarrel();
-          this.float('BARREL TIME', W / 2, 60, PAL.barrel);
+
+        // Shells, pearls and ice cream all pay out in shells and score, and
+        // all bank toward the next HIGH TIDE. The meter itself is never
+        // multiplied, or the mode would keep re-triggering itself.
+        const V = {
+          shell:    { shells: 1,  score: 12,  tide: 1, note: null },
+          pearl:    { shells: 5,  score: 60,  tide: 3, note: 'PEARL' },
+          icecream: { shells: 12, score: 150, tide: 6, note: 'ICE CREAM!' },
+        }[e.kind];
+
+        this.runShells += V.shells * mult;
+        this.score += V.score * mult;
+        p.tide += V.tide;
+
+        if (mult > 1) {
+          // During HIGH TIDE every single pickup shows its tripled value, so
+          // the mode is visibly doing something.
+          this.float(`+${V.shells * mult}`, sx, ey, PAL.tide);
+        } else if (V.note) {
+          this.float(V.note, sx, ey, e.kind === 'icecream' ? PAL.accent : PAL.tide);
+        }
+        this.sfx.trick(e.kind === 'icecream' ? 5 : Math.min(5, Math.floor(p.tide / 6)));
+
+        if (p.tide >= p.tideNeed && p.tideT <= 0) {
+          p.startTide();
+          this.float('HIGH TIDE!', W / 2, 62, PAL.tide);
           this.sfx.launch();
         }
         continue;
@@ -245,13 +259,6 @@ export class Game {
 
       // Solid.
       if (p.state === 'air') continue;
-      if (p.barrelT > 0) {
-        e.dead = true;
-        this.score += 30;
-        this.float('SMASH', sx, laneY(e.laneF) - 16, PAL.barrel);
-        this.sfx.land();
-        continue;
-      }
       if (p.invuln > 0) continue;
 
       e.dead = true;
@@ -309,8 +316,6 @@ export class Game {
     const sx = inRun ? this.scrollX : this.menuScroll;
 
     this.scene.drawSky(ctx, sx);
-    drawWave(ctx, sx, this.t);
-    this.scene.drawSharks(ctx, sx);
     drawOcean(ctx, sx, this.t);
     this.scene.drawDolphin(ctx);
     this.field.draw(ctx, sx);
@@ -319,20 +324,20 @@ export class Game {
     if (inRun) {
       this.player.draw(ctx, this.t);
       this.drawDanger(ctx, this.foamX - sx);
-      drawFoamWall(ctx, this.foamX - sx, this.t);
-      if (this.player.barrelT > 0) this.drawBarrel(ctx);
+      drawBigWave(ctx, this.foamX - sx, this.t);
+      if (this.player.tideT > 0) this.drawTide(ctx);
     }
   }
 
-  drawBarrel(ctx) {
-    ctx.globalAlpha = 0.12;
-    ctx.fillStyle = PAL.barrel;
+  /** Tint and edge streaks while HIGH TIDE is paying out. */
+  drawTide(ctx) {
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = PAL.tide;
     ctx.fillRect(0, LANE_TOP, W, PLAY_BOTTOM - LANE_TOP);
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.45;
     ctx.fillStyle = PAL.foam;
     for (let x = 0; x < W; x += 3) {
-      const y = LANE_TOP + 2 + Math.round(Math.sin(x * 0.05 + this.t * 6) * 2);
-      ctx.fillRect(x, y, 2, 1);
+      ctx.fillRect(x, LANE_TOP + 2 + Math.round(Math.sin(x * 0.05 + this.t * 6) * 2), 2, 1);
       ctx.fillRect(x, PLAY_BOTTOM - 3 - Math.round(Math.sin(x * 0.05 - this.t * 6) * 2), 2, 1);
     }
     ctx.globalAlpha = 1;
@@ -427,7 +432,7 @@ export class Game {
 
     if (owned) {
       drawText(ctx, selected ? 'RIDING NOW' : 'UNLOCKED', 136, 112, {
-        color: selected ? PAL.barrel : PAL.hud,
+        color: selected ? PAL.tide : PAL.hud,
       });
     } else {
       drawText(ctx, 'COST', 136, 112, { color: PAL.foamSh });

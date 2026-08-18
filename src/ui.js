@@ -98,7 +98,7 @@ export function drawPad(ctx, input, player, t) {
   disc(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r, bsOn ? PAL.accent : '#0d2f47');
   disc(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r - 2, bsOn ? PAL.accent : '#124565');
   bolt(ctx, BTN.boost.cx, BTN.boost.cy, bsOn ? PAL.ink : PAL.accent);
-  ring(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r + 3, player.boost, PAL.barrel, '#0d2f47');
+  ring(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r + 3, player.boost, PAL.tide, '#0d2f47');
 }
 
 export function drawHud(ctx, game) {
@@ -121,18 +121,20 @@ export function drawHud(ctx, game) {
     align: 'right', color: PAL.foamSh, shadow: PAL.ink,
   });
 
-  // Barrel meter, top centre.
-  const need = p.barrelNeed;
-  if (p.barrelT > 0) {
+  // HIGH TIDE meter, top centre. Loud when live, since the whole point is
+  // that you can see it paying out.
+  if (p.tideT > 0) {
     const flash = Math.floor(game.t * 10) % 2 === 0;
-    drawText(ctx, 'BARREL!', W / 2, 8, {
+    drawText(ctx, 'HIGH TIDE  X3', W / 2, 8, {
       scale: 2, align: 'center',
-      color: flash ? PAL.barrel : PAL.foam, outline: PAL.ink,
+      color: flash ? PAL.tide : PAL.foam, outline: PAL.ink,
     });
-    meter(ctx, W / 2 - 42, 26, 84, 4, p.barrelT / TUNE.barrelTime, PAL.barrel);
+    meter(ctx, W / 2 - 52, 26, 104, 4, p.tideT / TUNE.tideTime, PAL.tide);
   } else {
-    drawText(ctx, 'BARREL', W / 2 - 46, 7, { align: 'right', color: PAL.foamSh, shadow: PAL.ink });
-    meter(ctx, W / 2 - 42, 7, 84, 6, p.barrel / need, PAL.barrel);
+    drawText(ctx, 'HIGH TIDE', W / 2 - 46, 7, {
+      align: 'right', color: PAL.foamSh, shadow: PAL.ink,
+    });
+    meter(ctx, W / 2 - 42, 7, 84, 6, p.tide / p.tideNeed, PAL.tide);
   }
 
   // Floating score popups.

@@ -34,7 +34,7 @@ export class Player {
   get switchTime() { return this.mods.switchTime ?? TUNE.switchTime; }
   get maxLives() { return this.mods.lives ?? TUNE.lives; }
   get boostDrain() { return this.mods.boostDrain ?? TUNE.boostDrain; }
-  get barrelNeed() { return this.mods.barrelNeed ?? TUNE.barrelNeed; }
+  get tideNeed() { return this.mods.tideNeed ?? TUNE.tideNeed; }
   get shellMul() { return this.mods.shellMul ?? 1; }
 
   reset() {
@@ -50,8 +50,8 @@ export class Player {
     this.boost = 1;
     this.boosting = false;
     this.shield = !!this.mods.freeShield;
-    this.barrel = 0;      // shells banked toward the next barrel
-    this.barrelT = 0;     // seconds of barrel left
+    this.tide = 0;        // pickups banked toward the next HIGH TIDE
+    this.tideT = 0;       // seconds of HIGH TIDE left
     this.drift = 0;       // knocked-back screen offset after a hit
     this.spawnRate = 0;
     this.parts.length = 0;
@@ -60,7 +60,7 @@ export class Player {
   get x() { return PLAYER_X - this.drift; }
   get y() { return laneY(this.laneF) - this.airHeight; }
   get airborne() { return this.state === 'air'; }
-  get invincible() { return this.invuln > 0 || this.barrelT > 0 || this.state === 'air'; }
+  get invincible() { return this.invuln > 0 || this.state === 'air'; }
 
   moveLane(dir) {
     if (this.state === 'stagger' || this.state === 'wipe') return false;
@@ -90,9 +90,9 @@ export class Player {
     this.boosting = false;
   }
 
-  startBarrel() {
-    this.barrelT = TUNE.barrelTime;
-    this.barrel = 0;
+  startTide() {
+    this.tideT = TUNE.tideTime;
+    this.tide = 0;
   }
 
   update(dt, input, speed01) {
@@ -112,7 +112,7 @@ export class Player {
     else this.boost = Math.min(1, this.boost + TUNE.boostRefill * dt);
 
     if (this.invuln > 0) this.invuln -= dt;
-    if (this.barrelT > 0) this.barrelT -= dt;
+    if (this.tideT > 0) this.tideT -= dt;
     if (this.drift > 0) this.drift = Math.max(0, this.drift - 26 * dt);
 
     switch (this.state) {
@@ -206,10 +206,10 @@ export class Player {
     else if (this.state === 'wipe' || this.state === 'stagger') pose = 'wipe';
     else if (this.boosting) pose = 'tuck';
 
-    if (this.barrelT > 0) {
+    if (this.tideT > 0) {
       const r = 17 + Math.sin(t * 12) * 1.5;
-      glow(ctx, this.x, this.y - 9, r, 0.22, PAL.barrel);
-      glow(ctx, this.x, this.y - 9, r, 0.55, PAL.barrel, true);
+      glow(ctx, this.x, this.y - 9, r, 0.20, PAL.tide);
+      glow(ctx, this.x, this.y - 9, r, 0.5, PAL.tide, true);
     }
 
     drawRotated(ctx, this.sprites[pose], this.x, this.y, this.angle, SURFER_PIVOT);

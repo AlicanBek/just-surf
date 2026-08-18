@@ -7,6 +7,7 @@
 //   g  rock light     G  rock dark      o  wood  O  wood dark
 //   a  shark          A  shark body (under the surface)
 //   M  dolphin back  m  dolphin flank   n  dolphin belly
+//   R  deep red       q  mint  Q  mint dark   j  cone  J  cone dark
 //   p  shell  P  shell dark             l  pearl  L  pearl dark
 //   e  heart  E  heart light            c  water light  C  water mid
 //   y  gold
@@ -39,6 +40,11 @@ const BASE_COLORS = {
   M: '#2e4a63',
   m: '#5c87a3',
   n: '#c3dbe8',
+  R: '#b3202a',
+  q: '#8fe8c0',
+  Q: '#5fc49a',
+  j: '#d9a05b',
+  J: '#a8713a',
 };
 
 // --- surfer poses -----------------------------------------------------------
@@ -202,19 +208,44 @@ const LOG = [
 ];
 
 // Fin above the waterline, body showing through the water below it.
+// Head on: it surfaces facing you, jaws open. The mouth shuts between gapes.
 const SHARK = [
-  '........aa........',
-  '.......aaaa.......',
-  '......aaaaa.......',
-  '.....aaaaaaa......',
-  '....aaaaaaaaa.....',
-  '.ff.AAAAAAAAA.ff..',
-  'fffAAAAAAAAAAAfff.',
-  '.fAAAAAAAAAAAAAAf.',
-  '..AAAAAAAAAAAAAA..',
-  '...AAAAAAAAAAA....',
-  '.....AAAAAAA......',
-  '.......AAA........',
+  '.........GGGG.........',
+  '........GGggGG........',
+  '.......GGgggggG.......',
+  '......GGgggggggG......',
+  '.....GGgggggggggG.....',
+  '....GGggggggggggGG....',
+  '...GGgkkggggggkkgGG...',
+  '..GGggkkggggggkkggGG..',
+  '..GgggggggggggggggGG..',
+  '.GGffffffffffffffffGG.',
+  '.Gf.RRRRRRRRRRRRRR.fG.',
+  '.GfRRfRRfRRfRRfRRfRfG.',
+  '.GfRRRRRRRRRRRRRRRRfG.',
+  '.GffRRfRRfRRfRRfRRffG.',
+  '..GffffffffffffffffG..',
+  '...GGGGGGGGGGGGGGGG...',
+];
+
+// Same head with the jaws closed, so it can chomp on a timer.
+const SHARK_SHUT = [
+  '.........GGGG.........',
+  '........GGggGG........',
+  '.......GGgggggG.......',
+  '......GGgggggggG......',
+  '.....GGgggggggggG.....',
+  '....GGggggggggggGG....',
+  '...GGgkkggggggkkgGG...',
+  '..GGggkkggggggkkggGG..',
+  '..GgggggggggggggggGG..',
+  '.GGgggggggggggggggGG..',
+  '.Gfffffffffffffffffg..',
+  '.GfRRRRRRRRRRRRRRRfG..',
+  '.Gffffffffffffffffff..',
+  '..Ggggggggggggggggg...',
+  '..GggggggggggggggG....',
+  '...GGGGGGGGGGGGGG.....',
 ];
 
 // --- pickups ----------------------------------------------------------------
@@ -252,52 +283,64 @@ const HEART = [
   '....e....',
 ];
 
+// A kicker: you meet the low left edge and launch off the lip.
 const RAMP = [
-  '........yy........',
-  '.......yyyy.......',
-  '......yy..yy......',
-  '..................',
-  '....ffffffffff....',
-  '...fcccccccccf....',
-  '..fcccccccccccf...',
-  '.fcccCCCCCCCcccf..',
-  'fccCCCCCCCCCCCccf.',
-  '.fcCCCCCCCCCCCcf..',
-  '..fCCCCCCCCCCCf...',
-  '...ffffffffffff...',
+  '................yy',
+  '..............yyCC',
+  '............yyCCCC',
+  '..........yyCCCCCC',
+  '........yyCCCCCCCC',
+  '......yyCCCCCCCCCC',
+  '....yyCCCCCCCCCCCC',
+  '..yyCCCCCCCCCCCCCC',
+  'yyCCCCCCCCCCCCCCCC',
+  'yCCCCCCCCCCCCCCCCC',
+  'ffCCCCCCCCCCCCCCff',
+  '.ffffffffffffffff.',
+  '..ff..fff...ff..ff',
+];
+
+// Top of the pickup ladder: worth a dozen shells.
+const ICECREAM = [
+  '...ppp....',
+  '..ppppp...',
+  '.pppppppp.',
+  '.ppPpppPp.',
+  '.pPPPPPPp.',
+  '..pPPPPP..',
+  '..qqqqq...',
+  '.qqqqqqq..',
+  '.qqqQQQq..',
+  '..qQQQQ...',
+  '..jjjjjj..',
+  '..jJjjJj..',
+  '...jjjj...',
+  '...jJj....',
+  '....jj....',
 ];
 
 // --- scenery ----------------------------------------------------------------
 // Leaping bottlenose, facing right: raked dorsal, forked flukes, pectoral fin
 // below the head, and a slim rostrum. Drawn nose-level; the leap angle comes
 // from rotating it to match its velocity.
+// Blunt beak, sickle dorsal, forked flukes. Faces right.
 const DOLPHIN = [
-  '...........MM..................',
-  '...........MMM.................',
-  '..........MMMMM................',
-  'MM........MMMMMM...............',
-  '.MM......MMMMMMMM..............',
-  '..MM....MMMMMMMMMMMM...........',
-  '...MMMMMMMMMMMMMMMMMMMM........',
-  '....MMMMMMMMMMMMMMMMMMkMM......',
-  '....mmmmmmmmmmmmmmmmmmmmmMMMMMM',
-  '....mmmmmmmmmmmmmmmmmmmmmnnnnn.',
-  '.....nnnnnnnnnnnnnnnnnnn.......',
-  '...MMnnnnnnnnnnnnnnnnnn........',
-  '..MM....nnnnnnnnnnnMMMM........',
-  '.MM................MMMM........',
-  'MM.................MMM.........',
-  '..................MMM..........',
-];
-
-// A cruising fin for the background, smaller than the obstacle shark.
-const FIN = [
-  '....aa....',
-  '...aaa....',
-  '..aaaa....',
-  '.aAAaaa...',
-  'fffAAAAff.',
-  '.f.ffff...',
+  '.............MM...............',
+  '............MMMM..............',
+  '...........MMMMMM.............',
+  'MMM.......MMMMMMMM............',
+  'MMMM.....MMMMMMMMMMM..........',
+  '.MMMM..MMMMMMMMMMMMMMMMM......',
+  '..MMMMMMMMMMMMMMMMMMMMMMMMM...',
+  '...MMMMMMMMMMMMMMMMMMMkMMMMMM.',
+  '...MMMmmmmmmmmmmmmmmmmmmmmmMMM',
+  '...MMmmmmmmmmmmmmmmmmmmmmmmmnn',
+  '..MMMMnnnnnnnnnnnnnnnnnnnnnnn.',
+  '.MMMM..nnnnnnnnnnnnnnnnnnnnn..',
+  'MMMM.....nnnnnnnnnnnnnnnnMM...',
+  'MMM........nnnnnnnnnMMMM......',
+  '..............nnnnMMMM........',
+  '................MMM...........',
 ];
 
 const GULL_A = ['.f...f.', '..f.f..', '...f...'];
@@ -328,13 +371,14 @@ export const SPRITES = {
   buoy: makeSprite(BUOY),
   log: makeSprite(LOG),
   shark: makeSprite(SHARK),
+  sharkShut: makeSprite(SHARK_SHUT),
   shell: makeSprite(SHELL),
   pearl: makeSprite(PEARL),
   heart: makeSprite(HEART),
   heartDim: makeSprite(HEART, { e: '#1d3550', E: '#2b4a68' }),
   ramp: makeSprite(RAMP),
+  icecream: makeSprite(ICECREAM),
   dolphin: makeSprite(DOLPHIN),
-  fin: makeSprite(FIN),
   gullA: makeSprite(GULL_A),
   gullB: makeSprite(GULL_B),
 };

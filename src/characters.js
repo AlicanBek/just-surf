@@ -42,11 +42,11 @@ export const ROSTER = [
   {
     id: 'tube',
     name: 'TUBE PRO',
-    blurb: 'LIVES INSIDE THE WAVE',
-    perk: 'BARREL FILLS 40% FASTER',
+    blurb: 'NEVER MISSES A SET',
+    perk: 'HIGH TIDE FILLS FASTER',
     cost: 1800,
     colors: { w: '#0d5c6e', W: '#17a0b8', b: '#f2fbff', r: '#00d0a4', h: '#2b1d13' },
-    mods: { barrelNeed: 17 },
+    mods: { tideNeed: 10 },
   },
   {
     id: 'legend',
