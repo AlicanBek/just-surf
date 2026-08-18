@@ -59,26 +59,23 @@ export function panel(ctx, x, y, w, h, alpha = 0.82) {
   ctx.fillRect(x + w - 1, y, 1, h);
 }
 
-const SCALES = [2, 1.5, 1];
+// One button style for the whole game: same height, same text size, on every
+// screen. Rows differ in width only, because their labels do.
+export const BTN_H = 24;
+export const BTN_SCALE = 1.5;
 const PAD_X = 10;
 const PAD_Y = 8;
 
-/**
- * Largest text scale at which every one of these labels fits its rect. Buttons
- * drawn as a row share one scale so they read as a set, and nothing can
- * overflow its box no matter how long a label gets.
- */
-export function fitScale(pairs) {
-  for (const sc of SCALES) {
-    if (pairs.every(([label, r]) =>
-      textWidth(label, sc) <= r.w - PAD_X && GLYPH_H * sc <= r.h - PAD_Y)) return sc;
-  }
-  return 1;
+function fits(label, r, scale) {
+  return textWidth(label, scale) <= r.w - PAD_X && GLYPH_H * scale <= r.h - PAD_Y;
 }
 
 export function button(ctx, r, label, opts = {}) {
   const { active = false, dim = false } = opts;
-  const scale = opts.scale ?? fitScale([[label, r]]);
+  // Always the house size, unless a label genuinely will not fit, in which case
+  // shrink rather than spill out of the box.
+  const scale = fits(label, r, BTN_SCALE) ? BTN_SCALE : 1;
+
   ctx.fillStyle = active ? PAL.accent : dim ? '#123049' : '#17456b';
   ctx.fillRect(r.x, r.y, r.w, r.h);
   ctx.fillStyle = active ? PAL.foam : PAL.foamSh;
@@ -86,10 +83,22 @@ export function button(ctx, r, label, opts = {}) {
   ctx.fillRect(r.x, r.y + r.h - 1, r.w, 1);
   ctx.fillRect(r.x, r.y, 1, r.h);
   ctx.fillRect(r.x + r.w - 1, r.y, 1, r.h);
-  drawText(ctx, label, r.x + r.w / 2, r.y + (r.h - 7 * scale) / 2 + 1, {
+  drawText(ctx, label, r.x + r.w / 2, r.y + (r.h - GLYPH_H * scale) / 2 + 1, {
     scale, align: 'center',
     color: active ? PAL.ink : dim ? '#6a8ba5' : PAL.hud,
   });
+}
+
+/**
+ * A shell icon sitting right against its count, drawn as one unit so the two
+ * never drift apart.
+ */
+export function shellCount(ctx, rightX, y, value, scale = 1.5, color = PAL.accent) {
+  const text = String(value);
+  const tw = textWidth(text, scale);
+  const icon = SPRITES.shell;
+  drawText(ctx, text, rightX, y, { align: 'right', scale, color, outline: PAL.ink });
+  ctx.drawImage(icon, Math.round(rightX - tw - icon.width - 2), Math.round(y));
 }
 
 export function meter(ctx, x, y, w, h, frac, color, back = '#0e3350') {
@@ -127,8 +136,7 @@ export function drawHud(ctx, game) {
     ctx.drawImage(i < p.lives ? SPRITES.heart : SPRITES.heartDim, 6 + i * 9, 5);
   }
 
-  // Shells this run. Loud enough to be the number you play for, without
-  // taking over the corner.
+  // Shells this run, icon tight against the number.
   ctx.drawImage(SPRITES.shell, 5, 16);
   drawText(ctx, String(game.runShells), 17, 17, {
     scale: 1.5, color: PAL.accent, outline: PAL.ink,

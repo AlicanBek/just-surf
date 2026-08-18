@@ -9,18 +9,20 @@ import { drawBigWave } from './bigwave.js';
 import { Field } from './entities.js';
 import { Player } from './player.js';
 import { ROSTER, getCharacter, loadSave, writeSave, characterSprites } from './characters.js';
-import { BTN, drawPad, drawHud, panel, button, meter, fitScale } from './ui.js';
+import { BTN, drawPad, drawHud, panel, button, meter, shellCount } from './ui.js';
 
+// Every button is BTN_H tall and shares one baseline, so the rows line up
+// across screens. Only widths differ, because the labels do.
 const R = {
-  play:     { x: 104, y: 150, w: 112, h: 26 },
-  surfers:  { x: 8,   y: 152, w: 84,  h: 24 },
-  sound:    { x: 276, y: 152, w: 36,  h: 24 },
-  prev:     { x: 8,   y: 74,  w: 22,  h: 30 },
-  next:     { x: 88,  y: 74,  w: 22,  h: 30 },
-  action:   { x: 168, y: 152, w: 144, h: 24 },
-  back:     { x: 8,   y: 152, w: 74,  h: 24 },
-  retry:    { x: 44,  y: 150, w: 112, h: 24 },
-  toShop:   { x: 164, y: 150, w: 112, h: 24 },
+  surfers:  { x: 8,   y: 152, w: 116, h: 24 },
+  play:     { x: 132, y: 152, w: 116, h: 24 },
+  sound:    { x: 272, y: 152, w: 40,  h: 24 },
+  prev:     { x: 8,   y: 74,  w: 24,  h: 28 },
+  next:     { x: 88,  y: 74,  w: 24,  h: 28 },
+  back:     { x: 8,   y: 152, w: 148, h: 24 },
+  action:   { x: 164, y: 152, w: 148, h: 24 },
+  retry:    { x: 44,  y: 152, w: 112, h: 24 },
+  toShop:   { x: 164, y: 152, w: 112, h: 24 },
 };
 
 export class Game {
@@ -386,13 +388,9 @@ export class Game {
     const paddling = Math.floor(this.t * 3) % 2 ? 'paddleB' : 'paddleA';
     drawRotated(ctx, characterSprites(ch.id)[paddling], 74, laneY(2), 0, SURFER_PIVOT);
 
-    const sound = this.sfx.muted ? 'OFF' : 'ON';
-    const menuScale = fitScale([
-      ['PADDLE OUT', R.play], ['SURFERS', R.surfers], [sound, R.sound],
-    ]);
-    button(ctx, R.play, 'PADDLE OUT', { active: true, scale: menuScale });
-    button(ctx, R.surfers, 'SURFERS', { scale: menuScale });
-    button(ctx, R.sound, sound, { dim: this.sfx.muted, scale: menuScale });
+    button(ctx, R.surfers, 'SURFERS');
+    button(ctx, R.play, 'PADDLE OUT', { active: true });
+    button(ctx, R.sound, this.sfx.muted ? 'OFF' : 'ON', { dim: this.sfx.muted });
   }
 
   drawShop(ctx) {
@@ -408,10 +406,7 @@ export class Game {
     const afford = this.save.shells >= ch.cost;
 
     drawText(ctx, 'SURFERS', 8, 6, { scale: 2, color: PAL.hud, outline: PAL.ink });
-    ctx.drawImage(SPRITES.shell, W - 70, 7);
-    drawText(ctx, String(this.save.shells), W - 8, 7, {
-      align: 'right', scale: 1.5, color: PAL.accent, outline: PAL.ink,
-    });
+    shellCount(ctx, W - 8, 7, this.save.shells);
 
     // Preview, at double size so the palette reads.
     panel(ctx, 8, 26, 104, 118, 0.7);
@@ -453,11 +448,10 @@ export class Game {
 
     const label = owned ? (selected ? 'READY' : 'SELECT')
       : afford ? 'UNLOCK' : 'NOT ENOUGH';
-    const shopScale = fitScale([[label, R.action], ['BACK', R.back]]);
+    button(ctx, R.back, 'BACK');
     button(ctx, R.action, label, {
-      active: owned ? !selected : afford, dim: !owned && !afford, scale: shopScale,
+      active: owned ? !selected : afford, dim: !owned && !afford,
     });
-    button(ctx, R.back, 'BACK', { scale: shopScale });
 
     if (this.notice > 0) {
       drawText(ctx, 'GO COLLECT MORE SHELLS!', W / 2, 146, {
@@ -472,38 +466,37 @@ export class Game {
     ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = 1;
 
-    panel(ctx, 40, 18, 240, 124);
+    panel(ctx, 40, 14, 240, 132);
 
-    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 24, {
+    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 20, {
       scale: 2, align: 'center', color: PAL.bad, outline: PAL.ink,
     });
 
-    // The score gets the most room on the screen, with clear air either side
-    // of it so the title and the label do not crowd in.
-    drawText(ctx, String(Math.floor(this.score)), W / 2, 44, {
+    // Twelve pixels under the title, eight above the label: the number needs to
+    // sit on its own rather than touching either.
+    drawText(ctx, String(Math.floor(this.score)), W / 2, 46, {
       scale: 4, align: 'center', color: PAL.hud, outline: PAL.ink,
     });
-    drawText(ctx, 'SCORE', W / 2, 76, { align: 'center', color: PAL.foamSh });
+    drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
 
     // Two columns: what you did on the left, your standing on the right.
-    drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 98, { color: PAL.hud });
-    ctx.drawImage(SPRITES.shell, 52, 110);
-    drawText(ctx, `+${this.earned} SHELLS`, 65, 112, { color: PAL.accent });
+    drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 102, { color: PAL.hud });
+    ctx.drawImage(SPRITES.shell, 52, 114);
+    drawText(ctx, `+${this.earned} SHELLS`, 65, 116, { color: PAL.accent });
 
     if (this.newBest) {
       const flash = Math.floor(this.t * 6) % 2 === 0;
-      drawText(ctx, 'NEW BEST!', 268, 98, {
+      drawText(ctx, 'NEW BEST!', 268, 102, {
         align: 'right', color: flash ? PAL.accent : PAL.foam,
       });
     } else {
-      drawText(ctx, `BEST ${this.save.best}`, 268, 98, { align: 'right', color: PAL.foamSh });
+      drawText(ctx, `BEST ${this.save.best}`, 268, 102, { align: 'right', color: PAL.foamSh });
     }
-    drawText(ctx, `TOTAL ${this.save.shells}`, 268, 112, {
+    drawText(ctx, `TOTAL ${this.save.shells}`, 268, 116, {
       align: 'right', color: PAL.foamSh,
     });
 
-    const overScale = fitScale([['AGAIN', R.retry], ['SURFERS', R.toShop]]);
-    button(ctx, R.retry, 'AGAIN', { active: true, scale: overScale });
-    button(ctx, R.toShop, 'SURFERS', { scale: overScale });
+    button(ctx, R.retry, 'AGAIN', { active: true });
+    button(ctx, R.toShop, 'SURFERS');
   }
 }
