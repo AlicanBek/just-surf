@@ -48,6 +48,7 @@ export class Player {
   get tideNeed() { return this.mods.tideNeed ?? TUNE.tideNeed; }
   get shellMul() { return this.mods.shellMul ?? 1; }
   get hitInvuln() { return this.mods.hitInvuln ?? TUNE.hitInvuln; }
+  get sharkProof() { return this.mods.sharkProof === true; }
 
   reset() {
     this.lane = 2;

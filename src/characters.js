@@ -21,6 +21,23 @@ export const ROSTER = [
     mods: { switchTime: 0.09 },
   },
   {
+    id: 'beyzos',
+    name: 'BEYZOS MILOR',
+    blurb: 'KNOWS EVERY CUISINE',
+    perk: 'IMMUNE TO SHARKS',
+    cost: 150,
+    colors: {
+      // White bikini as asked, but trimmed in the orange of her board: black
+      // hair over a white bikini otherwise reads almost exactly like Mujde at
+      // this size, and the trim is the cheapest thing that tells them apart.
+      s: '#e8b285', S: '#bd8459', 2: '#e8b285', Z: '#e8b285',
+      h: '#15141a', H: '#39353f', 3: '#15141a',
+      w: '#fff8ee', W: '#f5872e', B: '#fff8ee',
+      b: '#f5872e', r: '#fff4dc',
+    },
+    mods: { sharkProof: true },
+  },
+  {
     id: 'mujde',
     name: 'MUJDE',
     blurb: 'NEW TO THE LINEUP',

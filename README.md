@@ -49,12 +49,13 @@ Both thumbs work at once — you can hold boost and change lanes together.
 Each one is a palette swap of the same drawing with a single perk attached.
 Progress is saved to `localStorage`.
 
-Costs are set against a measured run. Fifty bot runs average 232 shells, so
-the four unlocks land at roughly one, three, six and eight runs.
+Costs are set against a measured run. Fifty bot runs average 232 shells, so the
+paid surfers land at roughly two thirds of a run, then one, three, six and eight.
 
 | Surfer | Cost | Perk |
 |---|---|---|
 | Jungle Boy | free | Fastest lane switch |
+| Beyzos Milor | 150 | Immune to sharks |
 | Mujde | 250 | Boost lasts longer |
 | Zeynep | 700 | +20% shells |
 | Cindy | 1400 | HIGH TIDE fills faster |

@@ -275,6 +275,16 @@ export class Game {
 
       e.dead = true;
 
+      // Beyzos knows exactly what she is looking at. Checked before HIGH TIDE
+      // and the shield so neither is spent on a hit she was never going to take.
+      if (e.kind === 'shark' && p.sharkProof) {
+        this.score += 15;
+        p.splash(6);
+        this.float('SUSHI!', sx, laneY(e.laneF) - 16, PAL.good);
+        this.sfx.land();
+        continue;
+      }
+
       // HIGH TIDE is protection as well as points: while the wave is with you,
       // obstacles break up instead of costing a life, and they do not let the
       // whitewater surge forward either. Checked before the shield so a run
