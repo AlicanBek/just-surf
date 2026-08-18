@@ -30,7 +30,9 @@ export const ROSTER = [
       // The pink is what separates her from Mujde now: black hair over a white
       // bikini read almost exactly like her at eight pixels of head, which is
       // why this used to carry an orange trim to tell them apart.
-      s: '#e8b285', S: '#bd8459', 2: '#e8b285', Z: '#e8b285',
+      // Zeynep's tone. 2 and Z sit on top of skin, so they move with it or she
+      // gets a patch on her muzzle and nose in the old colour.
+      s: '#f0c49a', S: '#c99a72', 2: '#f0c49a', Z: '#f0c49a',
       h: '#15141a', H: '#39353f', 3: '#15141a',
       w: '#ff9ec4', W: '#e0709f', B: '#ff9ec4',
       b: '#f5872e', r: '#fff4dc',
