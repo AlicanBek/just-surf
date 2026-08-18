@@ -26,7 +26,9 @@ export const PAL = {
   skyMid:   '#d885c8',
   skyLow:   '#f79ac4',
   skyHaze:  '#ffc9d8',
-  ray:      '#ffb2d4',
+  // Near-white, not pink: a pink ray is only ~18 luminance above the pink
+  // sky it sits on, so no amount of alpha makes it read near the horizon.
+  ray:      '#fff4fa',
   sun:      '#fff2d8',
   sunEdge:  '#ffd9a8',
   cloud:    '#ffdcea',

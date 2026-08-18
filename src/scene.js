@@ -19,6 +19,26 @@ function lerpHex(a, b, t) {
 
 const SUN = { x: 168, y: 58, r: 26 };
 
+// The sun never moves, so every sky pixel's angle and distance from it are
+// computed once. That makes a hard-edged, per-pixel sunburst cheap enough to
+// redraw every frame: at run time the ray test is just a modulo.
+const SKY_A = new Float32Array(W * HORIZON);
+const SKY_R = new Float32Array(W * HORIZON);
+for (let y = 0; y < HORIZON; y++) {
+  for (let x = 0; x < W; x++) {
+    const dx = x - SUN.x;
+    const dy = y - SUN.y;
+    const i = y * W + x;
+    SKY_R[i] = Math.hypot(dx, dy);
+    // 0 is due right along the horizon, PI/2 straight up, PI due left.
+    SKY_A[i] = Math.atan2(-dy, dx);
+  }
+}
+
+const RAYS = 13;                      // wedges across the half circle
+const RAY_STEP = Math.PI / RAYS;
+const RAY_HALF = RAY_STEP * 0.36;     // wide enough to be bold, with clear gaps
+
 export class Scene {
   constructor() {
     this.t = 0;
@@ -91,22 +111,31 @@ export class Scene {
     this.drawGulls(ctx, scrollX);
   }
 
-  /** Wedges fanning up out of the sun, as in the reference. */
+  /**
+   * A sunburst filling the whole half circle of sky, horizon to horizon. Drawn
+   * per pixel rather than as strips: a strip is only the cross-section of a ray
+   * that happens to point upward, and smears along its own length once the ray
+   * lies flat.
+   *
+   * Two passes at the same alpha, the second stopping short, so the wedges are
+   * brightest near the sun and fade outward without needing per-pixel alpha.
+   */
   drawRays(ctx) {
-    const count = 9;
+    const spin = Math.sin(this.t * 0.16) * 0.03;
     ctx.fillStyle = PAL.ray;
-    ctx.globalAlpha = 0.4;
-    for (let i = 0; i < count; i++) {
-      // Fixed fan, gently breathing so it is not dead still.
-      const a = -Math.PI / 2 + (i - (count - 1) / 2) * 0.30
-        + Math.sin(this.t * 0.25 + i) * 0.012;
-      const spread = 0.055;
-      for (let r = 12; r < 130; r += 1) {
-        const half = Math.max(1, r * spread);
-        const cx = SUN.x + Math.cos(a) * r;
-        const cy = SUN.y + Math.sin(a) * r;
-        if (cy < -4) continue;
-        ctx.fillRect(Math.round(cx - half), Math.round(cy), Math.round(half * 2), 1);
+    for (const [maxR, alpha] of [[240, 0.42], [104, 0.30]]) {
+      ctx.globalAlpha = alpha;
+      for (let y = 0; y < HORIZON; y++) {
+        for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          const a = SKY_A[i];
+          if (a < 0) continue;                    // sky above the sun only
+          const r = SKY_R[i];
+          if (r < SUN.r + 3 || r > maxR) continue;
+          const phase = ((a + spin) % RAY_STEP + RAY_STEP) % RAY_STEP;
+          if (Math.min(phase, RAY_STEP - phase) > RAY_HALF) continue;
+          ctx.fillRect(x, y, 1, 1);
+        }
       }
     }
     ctx.globalAlpha = 1;
