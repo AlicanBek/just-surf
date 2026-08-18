@@ -123,7 +123,7 @@ export class Scene {
   drawRays(ctx) {
     const spin = Math.sin(this.t * 0.16) * 0.03;
     ctx.fillStyle = PAL.ray;
-    for (const [maxR, alpha] of [[240, 0.42], [104, 0.30]]) {
+    for (const [maxR, alpha] of [[240, 0.34], [104, 0.24]]) {
       ctx.globalAlpha = alpha;
       for (let y = 0; y < HORIZON; y++) {
         for (let x = 0; x < W; x++) {
