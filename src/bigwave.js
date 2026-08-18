@@ -8,6 +8,7 @@ import { hash } from './ocean.js';
 // `edge` is the leading screen x. Everything to the left of it is inside it.
 const RISE = 46;       // px behind the front where the crest tops out
 const CREST_TOP = 30;  // how high the crest reaches
+const BAND = 9;        // px from one blue-green streak to the next
 
 /** Screen y of the crest, `d` px behind the leading edge. */
 function crest(d) {
@@ -29,10 +30,30 @@ export function drawBigWave(ctx, edge, t) {
 
     ctx.fillStyle = PAL.bwFoam;
     ctx.fillRect(x, top, 1, H - top);
-    ctx.fillStyle = PAL.bwMint;
-    ctx.fillRect(x, top + 5, 1, 2);
-    ctx.fillStyle = PAL.bwLight;
-    ctx.fillRect(x, top + 9, 1, 3);
+
+    // Blue-green streaks all the way down the face instead of one band under
+    // the lip. They hang off `top`, so they follow the curve of the crest the
+    // way foam lines follow a real wave face, and the phase drifts with x and
+    // time so they flow rather than reading as a fixed barcode.
+    const phase = Math.sin(x * 0.07 + t * 1.5) * 2 + Math.sin(x * 0.021 - t * 0.8) * 1.5;
+    let k = 0;
+    for (let y = top + 5 + Math.round(phase); y < H; y += BAND, k++) {
+      // Broken into dashes, the way the lane lines are, or continuous rules
+      // across the whole wall read as corduroy rather than moving water. The
+      // dash index counts from the leading edge, not from screen x, so the
+      // dashes travel with the wave instead of crawling across it.
+      const seg = Math.floor((d + k * 11) / 6);
+      if (hash(seg, k * 7 + 1) < 0.42) continue;
+      const yy = Math.max(top, y);
+      ctx.fillStyle = PAL.bwMint;
+      ctx.fillRect(x, yy, 1, 2);
+      // Only every other streak gets the darker blue under it, so the face
+      // keeps some plain foam between the lines.
+      if (k % 2 === 0) {
+        ctx.fillStyle = PAL.bwLight;
+        ctx.fillRect(x, yy + 3, 1, 1);
+      }
+    }
 
     // Churn, so the body is not a flat block of white.
     for (let i = 0; i < 3; i++) {
