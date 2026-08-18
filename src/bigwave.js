@@ -64,6 +64,29 @@ export function drawBigWave(ctx, edge, t) {
     }
   }
 
+  // The wall is ploughing into flat water, so the leading edge is a boiling
+  // fringe of foam rather than a clean cut. Only what lands ahead of the edge
+  // is worth drawing: bubbles inside the wall would be white on white. The
+  // field is indexed by distance ahead of the edge, so it travels with the
+  // wave and boils in place instead of sliding across the screen.
+  const frontTop = Math.round(crest(0)) - 5;
+  const depth = H - frontTop;
+  const boil = Math.floor(t * 10);
+  for (let y = frontTop; y < H; y++) {
+    // Widest low down, where the wall has the most water to push through.
+    const reach = 8 + Math.round(((y - frontTop) / depth) * 12);
+    for (let i = 0; i < reach; i++) {
+      const x = Math.round(edge) + i;
+      if (x < 0 || x >= W) continue;
+      // Packed against the edge, thinning out ahead of it.
+      const p = 0.88 - (i / reach) * 0.82;
+      if (hash(i * 13 + y * 7, boil + (y & 3)) > p) continue;
+      const big = hash(i + y * 5, boil) < 0.3;
+      ctx.fillStyle = hash(i * 3 + y, 5) < 0.3 ? PAL.bwFoamSh : PAL.bwFoam;
+      ctx.fillRect(x, y, big ? 2 : 1, big ? 2 : 1);
+    }
+  }
+
   // Spray flicking off the crest.
   ctx.fillStyle = PAL.bwFoam;
   for (let i = 0; i < 34; i++) {
