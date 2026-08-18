@@ -72,7 +72,7 @@ export const ROSTER = [
     name: 'ZEYNA',
     blurb: 'ZEYNEP AFTER THE STORM',
     perk: 'FREE SHIELD EACH RUN',
-    cost: 2400,
+    cost: 1850,
     colors: {
       2: '#c98a52',
       s: '#c98a52', S: '#a06a3a', Z: '#c98a52',
