@@ -2,7 +2,8 @@ import { SURFER_POSES, makeSprite } from './sprites.js';
 
 // Every character is the same surfer drawing with a different palette, so a new
 // one costs a handful of hex codes rather than a new sprite sheet. The keys are
-// boardshorts (w/W), hair (h/H), skin (s/S) and board (b/r).
+// boardshorts (w/W), hair (h/H), skin (s/S) and board (b/r). Boards are kept
+// off blue so they never disappear into the water.
 export const ROSTER = [
   {
     id: 'grom',
@@ -10,7 +11,7 @@ export const ROSTER = [
     blurb: 'ALL ELBOWS AND ENTHUSIASM',
     perk: 'FASTEST LANE SWITCH',
     cost: 0,
-    colors: { w: '#2fae7a', W: '#7ff0b8', h: '#5c3220', H: '#8a4f30', b: '#3c8fd0', r: '#f7efd9' },
+    colors: { w: '#2fae7a', W: '#7ff0b8', h: '#5c3220', H: '#8a4f30', b: '#ffd24a', r: '#e2543c' },
     mods: { switchTime: 0.09 },
   },
   {
@@ -28,7 +29,7 @@ export const ROSTER = [
     blurb: 'STILL WAXING A 1978 FIN',
     perk: '+20% SHELLS',
     cost: 400,
-    colors: { w: '#e05a2a', W: '#ffcf4a', h: '#c8994f', H: '#e8c07a', b: '#ffd98a', r: '#7a3f8f' },
+    colors: { w: '#e05a2a', W: '#ffcf4a', h: '#c8994f', H: '#e8c07a', b: '#ff8a3d', r: '#ffe08a' },
     mods: { shellMul: 1.2 },
   },
   {
@@ -37,7 +38,7 @@ export const ROSTER = [
     blurb: 'SURFS BY MOONLIGHT ONLY',
     perk: 'BOOST LASTS 60% LONGER',
     cost: 900,
-    colors: { w: '#2a2f4a', W: '#5be0ff', h: '#151520', H: '#33334a', s: '#8a6a52', S: '#6a4e3c', b: '#9fb8d0', r: '#5be0ff' },
+    colors: { w: '#2a2f4a', W: '#5be0ff', h: '#151520', H: '#33334a', s: '#8a6a52', S: '#6a4e3c', b: '#f2e8d0', r: '#ff6b57' },
     mods: { boostDrain: 0.25 },
   },
   {
@@ -46,7 +47,7 @@ export const ROSTER = [
     blurb: 'NEVER MISSES A SET',
     perk: 'HIGH TIDE FILLS FASTER',
     cost: 1800,
-    colors: { w: '#00c0a4', W: '#b8fff0', h: '#2b1d13', H: '#4a3020', b: '#f2fbff', r: '#0d5c6e' },
+    colors: { w: '#00c0a4', W: '#b8fff0', h: '#2b1d13', H: '#4a3020', b: '#fff4dc', r: '#00d0a4' },
     mods: { tideNeed: 12 },
   },
   {
@@ -55,7 +56,7 @@ export const ROSTER = [
     blurb: 'NOBODY KNOWS HER REAL NAME',
     perk: 'FREE SHIELD EACH RUN',
     cost: 3000,
-    colors: { w: '#c0264f', W: '#ffcf4a', h: '#f2e2c0', H: '#ffffff', s: '#c88a5e', S: '#a06844', b: '#ffe9a0', r: '#5a1030' },
+    colors: { w: '#c0264f', W: '#ffcf4a', h: '#f2e2c0', H: '#ffffff', s: '#c88a5e', S: '#a06844', b: '#ffe9a0', r: '#c0264f' },
     mods: { switchTime: 0.10, freeShield: true, shellMul: 1.1 },
   },
 ];

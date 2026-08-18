@@ -470,15 +470,16 @@ export class Game {
 
     panel(ctx, 40, 18, 240, 124);
 
-    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 25, {
-      scale: 3, align: 'center', color: PAL.bad, outline: PAL.ink,
+    drawText(ctx, this.caught ? 'EATEN ALIVE' : 'WIPEOUT', W / 2, 24, {
+      scale: 2, align: 'center', color: PAL.bad, outline: PAL.ink,
     });
 
-    // The score gets the most room on the screen; the label sits under it.
-    drawText(ctx, String(Math.floor(this.score)), W / 2, 50, {
+    // The score gets the most room on the screen, with clear air either side
+    // of it so the title and the label do not crowd in.
+    drawText(ctx, String(Math.floor(this.score)), W / 2, 44, {
       scale: 4, align: 'center', color: PAL.hud, outline: PAL.ink,
     });
-    drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
+    drawText(ctx, 'SCORE', W / 2, 76, { align: 'center', color: PAL.foamSh });
 
     // Two columns: what you did on the left, your standing on the right.
     drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 98, { color: PAL.hud });
@@ -497,7 +498,7 @@ export class Game {
       align: 'right', color: PAL.foamSh,
     });
 
-    button(ctx, R.retry, 'AGAIN', { active: true, scale: 2 });
-    button(ctx, R.toShop, 'SURFERS', { scale: 1 });
+    button(ctx, R.retry, 'AGAIN', { active: true });
+    button(ctx, R.toShop, 'SURFERS');
   }
 }

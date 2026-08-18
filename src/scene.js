@@ -182,7 +182,7 @@ export class Scene {
     // Leaves the water already pitched up and comes back down headfirst. The
     // sprite is drawn arched, so it carries some pitch of its own; this is
     // dialled back to suit rather than measured off the true velocity angle.
-    const angle = Math.atan2(d.vy, 96) * 0.72;
+    const angle = Math.atan2(d.vy, 88) * 0.86;
     drawRotated(ctx, SPRITES.dolphin, d.sx, d.base + d.y, angle, { x: 15, y: 12 });
   }
 }

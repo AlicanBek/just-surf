@@ -228,9 +228,9 @@ export class Player {
     else if (this.boosting) pose = 'tuck';
 
     if (this.tideT > 0) {
-      const r = 17 + Math.sin(t * 12) * 1.5;
-      glow(ctx, this.x, this.y - 9, r, 0.20, PAL.tide);
-      glow(ctx, this.x, this.y - 9, r, 0.5, PAL.tide, true);
+      const r = 19 + Math.sin(t * 12) * 1.5;
+      glow(ctx, this.x, this.y - 12, r, 0.20, PAL.tide);
+      glow(ctx, this.x, this.y - 12, r, 0.5, PAL.tide, true);
     }
 
     drawRotated(ctx, this.sprites[pose], this.x, this.y, this.angle, SURFER_PIVOT);
@@ -238,7 +238,7 @@ export class Player {
     if (this.shield) {
       ctx.strokeStyle = PAL.good;
       ctx.globalAlpha = 0.7 + Math.sin(t * 6) * 0.2;
-      ctx.strokeRect(Math.round(this.x - 13) + 0.5, Math.round(this.y - 21) + 0.5, 26, 27);
+      ctx.strokeRect(Math.round(this.x - 13) + 0.5, Math.round(this.y - 25) + 0.5, 26, 30);
       ctx.globalAlpha = 1;
     }
   }

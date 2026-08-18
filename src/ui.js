@@ -109,11 +109,11 @@ export function drawHud(ctx, game) {
     ctx.drawImage(i < p.lives ? SPRITES.heart : SPRITES.heartDim, 6 + i * 9, 5);
   }
 
-  // Shells this run, at double size: it is the number you are playing for.
-  const sh = SPRITES.shell;
-  ctx.drawImage(sh, 0, 0, sh.width, sh.height, 5, 16, sh.width * 2, sh.height * 2);
-  drawText(ctx, String(game.runShells), 28, 18, {
-    scale: 2, color: PAL.accent, outline: PAL.ink,
+  // Shells this run. Loud enough to be the number you play for, without
+  // taking over the corner.
+  ctx.drawImage(SPRITES.shell, 5, 16);
+  drawText(ctx, String(game.runShells), 17, 17, {
+    scale: 1.5, color: PAL.accent, outline: PAL.ink,
   });
 
   // Score, top right.
