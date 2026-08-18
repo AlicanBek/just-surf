@@ -15,9 +15,15 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Geometry comes from JS, matched to visualViewport. It cannot be inset:0:
+   iOS Safari's toolbar overlays the layout viewport rather than shrinking it,
+   so a full-viewport stage centres the canvas behind the toolbar. */
 #stage {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,39 +34,6 @@ canvas {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   background: #0b1a2e;
-}
-
-/* Anchored to the top, not the bottom: on a 16:9 phone the canvas fills the
-   height, and a bottom bar would land straight on the control keys. It is
-   dismissed on the first touch either way. */
-#chrome {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: max(6px, env(safe-area-inset-top));
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  pointer-events: none;
-  font: 600 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
-  letter-spacing: 1px;
-}
-
-#chrome button {
-  pointer-events: auto;
-  font: inherit;
-  color: #0b1a2e;
-  background: #ffcf4a;
-  border: 0;
-  border-radius: 999px;
-  padding: 7px 14px;
-  cursor: pointer;
-}
-
-#chrome p {
-  color: #7f9bb5;
-  text-align: center;
 }
 
 /* Touch devices held upright: ask for landscape rather than squeezing the

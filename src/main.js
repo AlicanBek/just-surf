@@ -18,16 +18,25 @@ input.mapPoint = (cx, cy) => {
 };
 input.attach(canvas);
 
-// Fill as much of the viewport as the 16:9 playfield allows. The upscale is
-// nearest-neighbour, so pixels stay hard-edged even at fractional scales.
+// Fill as much of the visible viewport as the 16:9 playfield allows. The
+// upscale is nearest-neighbour, so pixels stay hard-edged at any scale.
 //
-// visualViewport, not innerHeight: on iOS Safari innerHeight reports the height
-// with the toolbar hidden, so sizing to it makes the canvas taller than what you
-// can actually see and clips the top of the screen.
+// Both the stage and the canvas are driven from visualViewport. Sizing alone is
+// not enough: iOS Safari's toolbar overlays the layout viewport instead of
+// shrinking it, so a stage pinned to the viewport centres the canvas behind the
+// toolbar and clips its top. The stage is moved onto the visible region first,
+// and the canvas is centred inside that.
+const stage = document.getElementById('stage');
+
 function fit() {
   const vv = window.visualViewport;
   const vw = vv ? vv.width : window.innerWidth;
   const vh = vv ? vv.height : window.innerHeight;
+  stage.style.left = `${vv ? vv.offsetLeft : 0}px`;
+  stage.style.top = `${vv ? vv.offsetTop : 0}px`;
+  stage.style.width = `${vw}px`;
+  stage.style.height = `${vh}px`;
+
   const s = Math.min(vw / W, vh / H);
   canvas.style.width = `${Math.round(W * s)}px`;
   canvas.style.height = `${Math.round(H * s)}px`;
@@ -40,36 +49,16 @@ if (window.visualViewport) {
 }
 fit();
 
-// Fullscreen. iPhone Safari has no Fullscreen API for ordinary elements, so
-// there the only route is installing to the Home Screen; everywhere else gets a
-// button. Neither is offered once already running without browser chrome.
-const installed = window.navigator.standalone === true
-  || matchMedia('(display-mode: standalone)').matches
-  || matchMedia('(display-mode: fullscreen)').matches;
-
-if (!installed) {
-  const chrome = document.getElementById('chrome');
-  const btn = document.getElementById('full');
-  const el = document.documentElement;
-  const request = el.requestFullscreen || el.webkitRequestFullscreen;
-  chrome.hidden = false;
-  // Out of the way as soon as you start playing.
-  canvas.addEventListener('pointerdown', () => { chrome.hidden = true; }, { once: true });
-  if (request) {
-    btn.hidden = false;
-    btn.addEventListener('click', () => {
-      const done = request.call(el);
-      if (done && done.then) done.then(fit).catch(() => {});
-      chrome.hidden = true;
-    });
-    document.addEventListener('fullscreenchange', () => {
-      btn.textContent = document.fullscreenElement ? 'EXIT FULLSCREEN' : 'FULLSCREEN';
-      fit();
-    });
-  } else {
-    document.getElementById('ios').hidden = false;
-  }
-}
+// On a phone in a browser tab, roughly a quarter of the height goes to browser
+// chrome and there is nothing a page can do about it: iPhone Safari has no
+// Fullscreen API for ordinary elements. Installing to the Home Screen launches
+// without any chrome, so the title screen says so, in the game's own font,
+// rather than floating an HTML button over the art.
+game.showInstallHint =
+  matchMedia('(pointer: coarse)').matches
+  && !(window.navigator.standalone === true
+    || matchMedia('(display-mode: standalone)').matches
+    || matchMedia('(display-mode: fullscreen)').matches);
 
 // Dev hook: lets you poke at the running game from the console, and step it by
 // hand when requestAnimationFrame is throttled (background tabs, headless).

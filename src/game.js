@@ -39,6 +39,8 @@ export class Game {
     this.state = 'menu';
     this.browse = Math.max(0, ROSTER.findIndex((c) => c.id === this.save.selected));
     this.notice = 0;
+    // Set by main.js when running in a browser tab on a touch device.
+    this.showInstallHint = false;
     this.applyCharacter();
     this.resetRun();
   }
@@ -387,6 +389,13 @@ export class Game {
     // Waiting out the back, paddling.
     const paddling = Math.floor(this.t * 3) % 2 ? 'paddleB' : 'paddleA';
     drawRotated(ctx, characterSprites(ch.id)[paddling], 74, laneY(2), 0, SURFER_PIVOT);
+
+    // Only route to real fullscreen on a phone, so the title screen mentions it.
+    if (this.showInstallHint) {
+      drawText(ctx, 'ADD TO HOME SCREEN FOR FULLSCREEN', W / 2, 143, {
+        align: 'center', color: PAL.foamSh, shadow: PAL.ink,
+      });
+    }
 
     button(ctx, R.surfers, 'SURFERS');
     button(ctx, R.play, 'PADDLE OUT', { active: true });
