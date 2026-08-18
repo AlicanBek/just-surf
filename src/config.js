@@ -38,6 +38,8 @@ export const PAL = {
   islandDk: '#5a3580',
   islandLt: '#9a6cc4',
   islandSnow: '#efe4fb',
+  // Darker than the cone, so palms read against the slope and the sky alike.
+  palm:     '#3f2560',
 
   // Water stays deep blue with white and mint foam, the way the reference
   // handles blue water under a pink sky.

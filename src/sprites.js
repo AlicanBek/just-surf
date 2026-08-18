@@ -11,7 +11,7 @@
 //   R  deep red       q  mint  Q  mint dark   j  cone  J  cone dark
 //   p  shell  P  shell dark             l  pearl  L  pearl dark
 //   e  heart  E  heart light            c  water light  C  water mid
-//   y  gold
+//   y  gold          T  palm silhouette
 const BASE_COLORS = {
   k: '#122033',
   s: '#e0a070',
@@ -54,6 +54,7 @@ const BASE_COLORS = {
   x: '#a8e0f5',
   X: '#5fb4de',
   Y: '#2f7fb8',
+  T: '#3f2560',
 };
 
 // --- surfer poses -----------------------------------------------------------
@@ -484,6 +485,35 @@ const DOLPHIN = [
   'MM..MMM.......................',
 ];
 
+// Palms in silhouette for the island. Hand-drawn rather than generated: at ten
+// pixels tall, procedural fronds merge into a solid bar instead of reading as
+// separate leaves. One leans right, one leans left.
+const PALM_A = [
+  '..T...T..',
+  '.T.TTT.T.',
+  'T..TTT..T',
+  '...TTT...',
+  '....T....',
+  '....T....',
+  '....T....',
+  '...T.....',
+  '...T.....',
+  '..T......',
+];
+
+const PALM_B = [
+  '.T..T..T.',
+  '..TTTTT..',
+  'T.TTTTT.T',
+  '...TTT...',
+  '....T....',
+  '.....T...',
+  '.....T...',
+  '.....T...',
+  '......T..',
+  '......T..',
+];
+
 const GULL_A = ['.f...f.', '..f.f..', '...f...'];
 const GULL_B = ['.......', 'f.....f', '.f...f.', '..fff..'];
 
@@ -520,6 +550,8 @@ export const SPRITES = {
   ramp: makeSprite(RAMP),
   icecream: makeSprite(ICECREAM),
   dolphin: makeSprite(DOLPHIN),
+  palmA: makeSprite(PALM_A),
+  palmB: makeSprite(PALM_B),
   gullA: makeSprite(GULL_A),
   gullB: makeSprite(GULL_B),
 };

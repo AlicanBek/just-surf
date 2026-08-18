@@ -184,6 +184,15 @@ export class Scene {
           ctx.fillRect(x + dx, HORIZON - h, 1, Math.min(3, h));
         }
       }
+
+      // Palms along the shore, drawn after the cone so they silhouette against
+      // both the slope and the sky. Each leans away from the peak, and they are
+      // spaced so their crowns stay separate.
+      for (const f of [-0.95, -0.60, 0.58, 0.92]) {
+        const art = f < 0 ? SPRITES.palmB : SPRITES.palmA;
+        const px = x + Math.round(wide * f) - (art.width >> 1);
+        ctx.drawImage(art, px, HORIZON - art.height);
+      }
     }
   }
 
