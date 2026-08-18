@@ -1,81 +1,103 @@
 import { SURFER_POSES, makeSprite } from './sprites.js';
 
-// Every character is the same surfer drawing with a different palette, so a new
-// one costs a handful of hex codes rather than a new sprite sheet. The keys are
-// boardshorts (w/W), hair (h/H), skin (s/S) and board (b/r). Boards are kept
-// off blue so they never disappear into the water.
+// One body, five heads. Every character is the same drawing with a different
+// palette, plus the optional regions in the poses: 1 ears, N cap, 3 side
+// hair, B chest band, Z nose, 4 tail. A region with no colour is simply not
+// drawn, so a character only pays for the parts it uses.
 export const ROSTER = [
   {
-    id: 'grom',
-    name: 'THE GROM',
-    blurb: 'ALL ELBOWS AND ENTHUSIASM',
+    id: 'jungle',
+    name: 'JUNGLE BOY',
+    blurb: 'RAISED BY THE REEF',
     perk: 'FASTEST LANE SWITCH',
     cost: 0,
-    colors: { w: '#2fae7a', W: '#7ff0b8', h: '#5c3220', H: '#8a4f30', b: '#ffd24a', r: '#e2543c' },
+    colors: {
+      s: '#a9703f', S: '#7d4f2a', B: '#a9703f', Z: '#a9703f',
+      h: '#3b2415', H: '#5a3a22',
+      w: '#3f9c4a', W: '#7fd07a',
+      b: '#d9a05b', r: '#2f7f3a',
+    },
     mods: { switchTime: 0.09 },
   },
   {
-    id: 'lou',
-    name: 'LONGBOARD LOU',
-    blurb: 'NEVER RUSHED A SINGLE TURN',
+    id: 'tin',
+    name: 'TIN WOODMAN',
+    blurb: 'RUSTS BUT NEVER STOPS',
     perk: 'STARTS WITH 4 LIVES',
-    cost: 150,
-    colors: { w: '#e0b44a', W: '#fff0b0', h: '#b0b0b0', H: '#d8d8d8', s: '#d09060', S: '#a86c46', b: '#e8c98a', r: '#8a5a34' },
-    mods: { switchTime: 0.17, lives: 4 },
+    cost: 400,
+    colors: {
+      s: '#9aa3ab', S: '#6c757d', B: '#9aa3ab', Z: '#9aa3ab',
+      h: '#5a636b', H: '#8a939b', N: '#7d868e',
+      w: '#7d868e', W: '#c8d0d8',
+      b: '#c8d0d8', r: '#4a5058',
+    },
+    mods: { lives: 4, switchTime: 0.17 },
   },
   {
-    id: 'ray',
-    name: 'RETRO RAY',
-    blurb: 'STILL WAXING A 1978 FIN',
+    id: 'zeynep',
+    name: 'ZEYNEP',
+    blurb: 'FIRST OUT EVERY MORNING',
     perk: '+20% SHELLS',
-    cost: 400,
-    colors: { w: '#e05a2a', W: '#ffcf4a', h: '#c8994f', H: '#e8c07a', b: '#ff8a3d', r: '#ffe08a' },
+    cost: 1200,
+    colors: {
+      s: '#f0c49a', S: '#c99a72', Z: '#f0c49a',
+      h: '#f0d27a', H: '#fff0b8', 3: '#f0d27a',
+      w: '#2f7fd0', W: '#7fc0f0', B: '#2f7fd0',
+      b: '#fff4dc', r: '#2f7fd0',
+    },
     mods: { shellMul: 1.2 },
   },
   {
-    id: 'night',
-    name: 'NIGHT RIDER',
-    blurb: 'SURFS BY MOONLIGHT ONLY',
-    perk: 'BOOST LASTS 60% LONGER',
-    cost: 900,
-    colors: { w: '#2a2f4a', W: '#5be0ff', h: '#151520', H: '#33334a', s: '#8a6a52', S: '#6a4e3c', b: '#f2e8d0', r: '#ff6b57' },
-    mods: { boostDrain: 0.25 },
-  },
-  {
-    id: 'tube',
-    name: 'TUBE PRO',
-    blurb: 'NEVER MISSES A SET',
+    id: 'cindy',
+    name: 'CINDY',
+    blurb: 'NINE LIVES, ONE BOARD',
     perk: 'HIGH TIDE FILLS FASTER',
-    cost: 1800,
-    colors: { w: '#00c0a4', W: '#b8fff0', h: '#2b1d13', H: '#4a3020', b: '#fff4dc', r: '#00d0a4' },
+    cost: 2600,
+    colors: {
+      s: '#d8dde2', S: '#a8b0b8', B: '#d8dde2',
+      h: '#c0c8d0', H: '#eef2f6', 1: '#c0c8d0', Z: '#ffb3c6', 4: '#c0c8d0',
+      w: '#6f777f', W: '#b8c0c8',
+      b: '#ffd24a', r: '#6f777f',
+    },
     mods: { tideNeed: 12 },
   },
   {
-    id: 'legend',
-    name: 'THE LEGEND',
-    blurb: 'NOBODY KNOWS HER REAL NAME',
+    id: 'zeyna',
+    name: 'ZEYNA',
+    blurb: 'ZEYNEP AFTER THE STORM',
     perk: 'FREE SHIELD EACH RUN',
-    cost: 3000,
-    colors: { w: '#c0264f', W: '#ffcf4a', h: '#f2e2c0', H: '#ffffff', s: '#c88a5e', S: '#a06844', b: '#ffe9a0', r: '#c0264f' },
-    mods: { switchTime: 0.10, freeShield: true, shellMul: 1.1 },
+    cost: 5000,
+    colors: {
+      s: '#c98a52', S: '#a06a3a', Z: '#c98a52',
+      h: '#3fd07a', H: '#8fffb8', 3: '#3fd07a',
+      w: '#d0ff3f', W: '#ffff8f', B: '#d0ff3f',
+      b: '#1b2330', r: '#d0ff3f',
+    },
+    mods: { freeShield: true, switchTime: 0.10, shellMul: 1.1 },
   },
 ];
 
 const SAVE_KEY = 'justsurf.save.v1';
+const FIRST = ROSTER[0].id;
 
-const DEFAULT_SAVE = { shells: 0, best: 0, unlocked: ['grom'], selected: 'grom', runs: 0 };
+const DEFAULT_SAVE = { shells: 0, best: 0, unlocked: [FIRST], selected: FIRST, runs: 0 };
 
 export function loadSave() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return { ...DEFAULT_SAVE };
     const s = JSON.parse(raw);
+    // The roster changed, so drop ids that no longer exist rather than resetting
+    // the save: shells and best score are worth keeping.
+    const known = new Set(ROSTER.map((c) => c.id));
+    const unlocked = (Array.isArray(s.unlocked) ? s.unlocked : []).filter((id) => known.has(id));
+    if (!unlocked.includes(FIRST)) unlocked.unshift(FIRST);
     return {
       shells: s.shells | 0,
       best: s.best | 0,
       runs: s.runs | 0,
-      unlocked: Array.isArray(s.unlocked) && s.unlocked.length ? s.unlocked : ['grom'],
-      selected: s.selected || 'grom',
+      unlocked,
+      selected: known.has(s.selected) ? s.selected : FIRST,
     };
   } catch {
     return { ...DEFAULT_SAVE };
@@ -96,10 +118,10 @@ const SPRITE_CACHE = {};
 
 export function characterSprites(id) {
   if (SPRITE_CACHE[id]) return SPRITE_CACHE[id];
-  const ch = ROSTER.find((c) => c.id === id) || ROSTER[0];
+  const ch = getCharacter(id);
   const set = {};
   for (const pose in SURFER_POSES) set[pose] = makeSprite(SURFER_POSES[pose], ch.colors);
-  SPRITE_CACHE[id] = set;
+  SPRITE_CACHE[ch.id] = set;
   return set;
 }
 

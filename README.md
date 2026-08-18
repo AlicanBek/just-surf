@@ -49,12 +49,11 @@ Progress is saved to `localStorage`.
 
 | Surfer | Cost | Perk |
 |---|---|---|
-| The Grom | free | Fastest lane switch |
-| Longboard Lou | 150 | Starts with 4 lives |
-| Retro Ray | 400 | +20% shells |
-| Night Rider | 900 | Boost lasts 60% longer |
-| Tube Pro | 1800 | HIGH TIDE fills faster |
-| The Legend | 3000 | Free shield each run |
+| Jungle Boy | free | Fastest lane switch |
+| Tin Woodman | 400 | Starts with 4 lives |
+| Zeynep | 1200 | +20% shells |
+| Cindy | 2600 | HIGH TIDE fills faster |
+| Zeyna | 5000 | Free shield each run |
 
 ## Running it
 
@@ -103,9 +102,16 @@ screen it has come is how much trouble you are in.
 Runs open with the surfer prone and paddling, then a crouch, then upright: three
 frames over 0.9 seconds, invulnerable until they are on their feet.
 
-Surfers are drawn bare-chested in boardshorts, so a character's palette is its
-shorts (`w`/`W`), hair (`h`/`H`), skin (`s`/`S`) and board (`b`/`r`). Adding one
-is still just a handful of hex codes in `src/characters.js`.
+Every surfer is the same drawing in a different palette: shorts (`w`/`W`), hair
+(`h`/`H`), skin (`s`/`S`), board (`b`/`r`). On top of that the poses carry
+optional regions — `1` ears, `N` cap, `3` side hair, `B` chest band, `Z` nose,
+`4` tail — which are only drawn if a character gives them a colour. That is how
+a cat and a tin man come out of one body without a second sprite sheet. Adding a
+surfer is still a handful of hex codes in `src/characters.js`.
+
+Pick region keys that nothing else in the sheet uses. `E`, `L` and `X` were
+already heart-highlight, pearl-dark and wave-blue, so using them meant every
+character wore stray pink ears and a blue tail.
 
 The font takes fractional scales — `scale: 1.5` snaps each glyph pixel from its
 own edges, so half steps still land on whole pixels.
