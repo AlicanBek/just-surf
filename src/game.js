@@ -420,11 +420,10 @@ export class Game {
 
     button(ctx, R.surfers, 'SURFERS');
     button(ctx, R.play, 'PADDLE OUT', { active: true });
-    // A note and a speaker rather than words: lit and whole when on, dimmed and
-    // struck through when off, so the state reads without a label.
+    // A note and a speaker rather than words. The note keeps its shape either
+    // way and lets the button colour carry the state.
     button(ctx, R.music, '', {
-      active: this.sfx.musicOn, dim: !this.sfx.musicOn,
-      icon: this.sfx.musicOn ? 'noteOn' : 'noteOff',
+      active: this.sfx.musicOn, dim: !this.sfx.musicOn, icon: 'note',
     });
     button(ctx, R.sfx, '', {
       active: this.sfx.sfxOn, dim: !this.sfx.sfxOn,

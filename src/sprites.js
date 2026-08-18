@@ -521,7 +521,7 @@ const GULL_B = ['.......', 'f.....f', '.f...f.', '..fff..'];
 
 // HUD icons for the two audio toggles. 'i' is the lit shape, so they take the
 // button's own colour rather than carrying one of their own.
-const NOTE_ON = [
+const NOTE = [
   '....iiiii',
   '....iiiii',
   '....ii..i',
@@ -530,17 +530,6 @@ const NOTE_ON = [
   '....ii...',
   '.iiiii...',
   'iiiiii...',
-  'iiiii....',
-];
-const NOTE_OFF = [
-  '....iiiii',
-  '...iiiiii',
-  '..i.ii..i',
-  '....ii...',
-  '...ii....',
-  '..ii.....',
-  '.iiiii...',
-  'iiiii.i..',
   'iiiii....',
 ];
 const SPEAKER_ON = [
@@ -617,7 +606,9 @@ export function drawRotated(ctx, sprite, x, y, angle, pivot, flip = false) {
 }
 
 const ICON_GRIDS = {
-  noteOn: NOTE_ON, noteOff: NOTE_OFF,
+  // One note for both states: dimming the button says enough, and a struck
+  // through note just read as a broken drawing.
+  note: NOTE,
   speakerOn: SPEAKER_ON, speakerOff: SPEAKER_OFF,
 };
 
