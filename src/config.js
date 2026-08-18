@@ -53,13 +53,12 @@ export const PAL = {
   // The big wave chasing from behind.
   bwDeep:   '#0a2a4e',
   bwMid:    '#12457a',
-  // The wall is blue-tinted white rather than paper white: pure white next to a
-  // pink sky read as a hole in the screen, and the tint lets the blue-green
-  // streaks sit on it without turning the whole thing into a barcode.
+  // White-dominant on purpose: the blue-green streaks carry the colour, the
+  // body stays foam white. A blue tint on the body was tried and read worse.
   bwLight:  '#3f95cf',
   bwMint:   '#7fe6bd',
-  bwFoam:   '#cfe9f9',
-  bwFoamSh: '#a5d3ee',
+  bwFoam:   '#ffffff',
+  bwFoamSh: '#c9eef0',
   tubeIn:   '#06263c',
   tubeMid:  '#0c4165',
   tubeRim:  '#b6ecfb',
