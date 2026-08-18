@@ -266,9 +266,22 @@ export class Game {
       if (p.invuln > 0) continue;
 
       e.dead = true;
+
+      // HIGH TIDE is protection as well as points: while the wave is with you,
+      // obstacles break up instead of costing a life, and they do not let the
+      // whitewater surge forward either. Checked before the shield so a run
+      // does not burn its shield on a hit it was already immune to.
+      if (p.tideT > 0) {
+        this.score += 20;
+        p.splash(8);
+        this.float('SMASH!', sx, laneY(e.laneF) - 16, PAL.tide);
+        this.sfx.land();
+        continue;
+      }
+
       if (p.shield) {
         p.shield = false;
-        p.invuln = TUNE.hitInvuln;
+        p.invuln = p.hitInvuln;
         this.float('SHIELD!', sx, laneY(e.laneF) - 16, PAL.good);
         this.sfx.land();
         continue;
@@ -423,11 +436,11 @@ export class Game {
     const bob = Math.round(Math.sin(this.t * 2.5) * 2);
     ctx.drawImage(
       art, 0, 0, art.width, art.height,
-      60 - SURFER_PIVOT.x * 2, 104 + bob - SURFER_PIVOT.y * 2,
+      // Centred on the artwork, not the rider: the board reaches further
+      // forward than back, so centring on the rider hangs the nose off the panel.
+      60 - art.width, 104 + bob - SURFER_PIVOT.y * 2,
       art.width * 2, art.height * 2,
     );
-    ctx.fillStyle = PAL.laneEdge;
-    ctx.fillRect(22, 104 + bob, 76, 1);
     drawText(ctx, `${this.browse + 1} / ${ROSTER.length}`, 60, 132, {
       align: 'center', color: PAL.foamSh,
     });

@@ -85,10 +85,10 @@ const RIDE = [
   '..44....ss.....ss.............',
   '...44..ss.......ss............',
   '.......22.......222...........',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 const TUCK = [
@@ -116,10 +116,10 @@ const TUCK = [
   '...44..ss........ss...........',
   '...44.ss..........ss..........',
   '....44222.........222.........',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 const AIR = [
@@ -147,10 +147,10 @@ const AIR = [
   '..44..ss.........ss...........',
   '..44..ss.........ss...........',
   '...44422.......222............',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 const WIPE = [
@@ -178,10 +178,10 @@ const WIPE = [
   '..............................',
   '..............................',
   '..............................',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 // Catch: the arm sweeps forward and down, hand entering the water
@@ -211,10 +211,10 @@ const PADDLE_A = [
   '.444.sssssswwwwwwwsssss.......',
   '..sssssss.wwwww.........ss....',
   '...ssss..................ss...',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 // Recovery: the hand is carried forward at shoulder height. It used to
@@ -245,10 +245,10 @@ const PADDLE_B = [
   '.444.sssssswwwwwwwsssss.......',
   '..sssssss.wwwww...............',
   '...ssss.......................',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 // Halfway up: deep crouch, hands still near the rail.
@@ -277,10 +277,10 @@ const RISE = [
   '.......ss.......ss............',
   '.......ss.......ss............',
   '.......22.......222...........',
-  '...bbbbbbbbbbbbbbbbbbbbbb.....',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbbb..',
-  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  '.bbbbbbbbbbbbbbbbbbbbbbbbbb...',
+  '...bbbbbbbbbbbbbbbbbbbbbbbbbbbb.....',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..',
+  'bbrrbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...',
 ];
 
 export const SURFER_POSES = {

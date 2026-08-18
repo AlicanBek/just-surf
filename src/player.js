@@ -47,6 +47,7 @@ export class Player {
   get boostDrain() { return this.mods.boostDrain ?? TUNE.boostDrain; }
   get tideNeed() { return this.mods.tideNeed ?? TUNE.tideNeed; }
   get shellMul() { return this.mods.shellMul ?? 1; }
+  get hitInvuln() { return this.mods.hitInvuln ?? TUNE.hitInvuln; }
 
   reset() {
     this.lane = 2;
@@ -94,7 +95,7 @@ export class Player {
   stagger() {
     this.state = 'stagger';
     this.timer = 0.34;
-    this.invuln = TUNE.hitInvuln;
+    this.invuln = this.hitInvuln;
     this.drift = 12;
   }
 

@@ -23,7 +23,9 @@ the way, hoover up shells, and keep ahead of the foam.
   left. Drains fast, refills slowly, so save it for when the foam is breathing
   down your neck.
 - **HIGH TIDE** fires automatically once its meter fills. For seven seconds every
-  pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 36 shells.
+  pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 36 shells
+  — and nothing can hurt you: obstacles break up on contact instead of costing a
+  life, and they cannot make the whitewater surge forward either.
   It is a payout, not a shield: obstacles still hurt.
 
 Three hits ends the run — but so does the whitewater behind you. It runs to its
@@ -50,7 +52,7 @@ Progress is saved to `localStorage`.
 | Surfer | Cost | Perk |
 |---|---|---|
 | Jungle Boy | free | Fastest lane switch |
-| Tin Woodman | 400 | Starts with 4 lives |
+| Mujde | 350 | Longer mercy after a hit |
 | Zeynep | 1200 | +20% shells |
 | Cindy | 2600 | HIGH TIDE fills faster |
 | Zeyna | 5000 | Free shield each run |
@@ -106,9 +108,10 @@ Every surfer is the same drawing in a different palette: shorts (`w`/`W`), hair
 (`h`/`H`), skin (`s`/`S`), board (`b`/`r`). On top of that the poses carry
 optional regions — `1` ears, `2` light marking, `N` cap, `3` side hair, `B`
 chest band, `Z` nose, `4` tail — which are only drawn if a character gives them
-a colour. That is how a cat and a tin man come out of one body without a second
-sprite sheet. Adding a surfer is still a handful of hex codes in
-`src/characters.js`.
+a colour. That is how a cat comes out of the same body as four humans without a
+second sprite sheet. Adding a surfer is still a handful of hex codes in
+`src/characters.js`. `N` is currently unclaimed: it drew the Tin Woodman's cone
+before he was cut, and the pixels are still in the sheet waiting for a hat.
 
 A region that sits on top of skin (`2`, `B`, `Z`) has to be filled in by every
 character, with their own skin colour if they do not want the marking, or it
