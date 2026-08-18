@@ -1,7 +1,7 @@
 import {
   W, H, PAL, TUNE, LANE_TOP, PLAY_BOTTOM, laneY, PLAYER_X,
 } from './config.js';
-import { drawText } from './font.js';
+import { drawText, textWidth } from './font.js';
 import { SPRITES, SURFER_PIVOT, drawRotated } from './sprites.js';
 import { Scene } from './scene.js';
 import { drawOcean } from './ocean.js';
@@ -480,25 +480,30 @@ export class Game {
       scale: 4, align: 'center',
       color: this.newBest ? PAL.accent : PAL.hud, outline: PAL.ink,
     });
-    drawText(ctx, 'SCORE', W / 2, 82, {
-      align: 'center', color: this.newBest ? PAL.accent : PAL.foamSh,
-    });
+    // SCORE, with NEW BEST! alongside it when the run set one. The pair is
+    // centred as a unit so the badge reads as belonging to this number.
+    if (this.newBest) {
+      const flash = Math.floor(this.t * 6) % 2 === 0;
+      const gap = 7;
+      const wa = textWidth('SCORE');
+      const wb = textWidth('NEW BEST!');
+      const left = Math.round(W / 2 - (wa + gap + wb) / 2);
+      drawText(ctx, 'SCORE', left, 82, { color: PAL.accent });
+      drawText(ctx, 'NEW BEST!', left + wa + gap, 82, {
+        color: flash ? PAL.accent : PAL.foam,
+      });
+    } else {
+      drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
+    }
 
     // Two columns: what you did on the left, your standing on the right.
     drawText(ctx, `DISTANCE ${Math.floor(this.dist)}M`, 52, 102, { color: PAL.hud });
     ctx.drawImage(SPRITES.shell, 52, 114);
     drawText(ctx, `+${this.earned} SHELLS`, 65, 116, { color: PAL.accent });
 
-    if (this.newBest) {
-      const flash = Math.floor(this.t * 6) % 2 === 0;
-      drawText(ctx, 'NEW BEST!', 268, 102, {
-        align: 'right', color: flash ? PAL.accent : PAL.foam,
-      });
-    } else {
-      drawText(ctx, `BEST SCORE ${this.save.best}`, 268, 102, {
-        align: 'right', color: PAL.foamSh,
-      });
-    }
+    drawText(ctx, `BEST SCORE ${this.save.best}`, 268, 102, {
+      align: 'right', color: this.newBest ? PAL.accent : PAL.foamSh,
+    });
     // Your shell bank, iconed to match the row opposite: left column is this
     // run, right column is all time. "TOTAL" read like a total score.
     shellCount(ctx, 268, 116, this.save.shells, 1, PAL.foamSh);
