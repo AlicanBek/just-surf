@@ -104,10 +104,17 @@ frames over 0.9 seconds, invulnerable until they are on their feet.
 
 Every surfer is the same drawing in a different palette: shorts (`w`/`W`), hair
 (`h`/`H`), skin (`s`/`S`), board (`b`/`r`). On top of that the poses carry
-optional regions — `1` ears, `N` cap, `3` side hair, `B` chest band, `Z` nose,
-`4` tail — which are only drawn if a character gives them a colour. That is how
-a cat and a tin man come out of one body without a second sprite sheet. Adding a
-surfer is still a handful of hex codes in `src/characters.js`.
+optional regions — `1` ears, `2` light marking, `N` cap, `3` side hair, `B`
+chest band, `Z` nose, `4` tail — which are only drawn if a character gives them
+a colour. That is how a cat and a tin man come out of one body without a second
+sprite sheet. Adding a surfer is still a handful of hex codes in
+`src/characters.js`.
+
+A region that sits on top of skin (`2`, `B`, `Z`) has to be filled in by every
+character, with their own skin colour if they do not want the marking, or it
+punches a transparent hole in them. A region that sits on empty space (`1`, `N`,
+`3`, `4`) is free: only the characters that define it see anything, so Cindy's
+ears can be reshaped without touching the other four.
 
 Pick region keys that nothing else in the sheet uses. `E`, `L` and `X` were
 already heart-highlight, pearl-dark and wave-blue, so using them meant every

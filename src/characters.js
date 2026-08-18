@@ -12,6 +12,7 @@ export const ROSTER = [
     perk: 'FASTEST LANE SWITCH',
     cost: 0,
     colors: {
+      2: '#a9703f',
       s: '#a9703f', S: '#7d4f2a', B: '#a9703f', Z: '#a9703f',
       h: '#3b2415', H: '#5a3a22',
       w: '#3f9c4a', W: '#7fd07a',
@@ -26,6 +27,7 @@ export const ROSTER = [
     perk: 'STARTS WITH 4 LIVES',
     cost: 400,
     colors: {
+      2: '#9aa3ab',
       s: '#9aa3ab', S: '#6c757d', B: '#9aa3ab', Z: '#9aa3ab',
       // No hair: the head is the same plate as the body, with a cone on top.
       h: '#9aa3ab', H: '#c8d0d8', N: '#7d868e',
@@ -41,6 +43,7 @@ export const ROSTER = [
     perk: '+20% SHELLS',
     cost: 1200,
     colors: {
+      2: '#f0c49a',
       s: '#f0c49a', S: '#c99a72', Z: '#f0c49a',
       h: '#f0d27a', H: '#fff0b8', 3: '#f0d27a',
       w: '#2f7fd0', W: '#7fc0f0', B: '#2f7fd0',
@@ -55,11 +58,13 @@ export const ROSTER = [
     perk: 'HIGH TIDE FILLS FASTER',
     cost: 2600,
     colors: {
-      s: '#4a5560', S: '#333c45', B: '#4a5560',
-      // Head is fur like the rest of her, H and W are the white patches, and the
-      // shorts region is fur too: a cat does not wear shorts.
-      h: '#4a5560', H: '#f2f5f7', 1: '#4a5560', Z: '#ffb3c6', 4: '#4a5560',
-      w: '#4a5560', W: '#f2f5f7',
+      // A grey cat, not a person: mid fur over the body, darker fur on the
+      // crown, ears and tail, cream markings on the muzzle, chin, chest and
+      // paws. The muzzle is the 2 region, the chest reuses the bikini region
+      // as a bib, and W is fur too so no stripe shows on her hips.
+      s: '#8a827b', S: '#5c554f', 2: '#f4efe6',
+      h: '#5c554f', H: '#f5d98f', 1: '#5c554f', Z: '#d99aa6', 4: '#7d766f',
+      B: '#f4efe6', w: '#8a827b', W: '#8a827b',
       b: '#e0342a', r: '#fff4dc',
     },
     mods: { tideNeed: 12 },
@@ -71,6 +76,7 @@ export const ROSTER = [
     perk: 'FREE SHIELD EACH RUN',
     cost: 5000,
     colors: {
+      2: '#c98a52',
       s: '#c98a52', S: '#a06a3a', Z: '#c98a52',
       h: '#3fd07a', H: '#8fffb8', 3: '#3fd07a',
       w: '#d0ff3f', W: '#ffff8f', B: '#d0ff3f',
