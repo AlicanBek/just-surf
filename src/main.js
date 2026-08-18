@@ -35,6 +35,9 @@ fit();
 // hand when requestAnimationFrame is throttled (background tabs, headless).
 window.surf = {
   game, input, ctx, sfx,
+  paused: false,
+  pause() { this.paused = true; return 'paused'; },
+  resume() { this.paused = false; last = performance.now(); acc = 0; return 'running'; },
   step(frames = 60) {
     for (let i = 0; i < frames; i++) {
       game.update(1 / 60, input);
@@ -55,13 +58,13 @@ function frame(now) {
   acc += dt;
 
   let steps = 0;
-  while (acc >= STEP && steps < 5) {
+  while (!window.surf.paused && acc >= STEP && steps < 5) {
     game.update(STEP, input);
     input.endFrame();
     acc -= STEP;
     steps++;
   }
-  if (steps === 5) acc = 0;
+  if (steps === 5 || window.surf.paused) acc = 0;
 
   game.draw(ctx);
   requestAnimationFrame(frame);

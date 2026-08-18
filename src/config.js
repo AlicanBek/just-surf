@@ -3,39 +3,58 @@
 export const W = 320;
 export const H = 180;
 
-export const HORIZON = 56;
+// Vertical budget, top to bottom:
+//   0..28    clean sky, with the sun, an island and the HUD over it
+//   28..64   the barrel: a big wave standing behind the whole playfield
+//   64..154  five lanes of rideable water
+//   154..180 foreground water, where the thumb buttons sit
+export const HORIZON = 28;
 
-// Five lanes of open ocean. Lane 0 is furthest out to sea, lane 4 nearest shore.
 export const LANES = 5;
-export const LANE_TOP = 62;
+export const LANE_TOP = 64;
 export const LANE_H = 18;
-export const PLAY_BOTTOM = LANE_TOP + LANES * LANE_H; // 152
+export const PLAY_BOTTOM = LANE_TOP + LANES * LANE_H; // 154
 export const laneY = (i) => LANE_TOP + i * LANE_H + Math.floor(LANE_H / 2);
 
 // The surfer holds this screen x while the ocean scrolls past.
 export const PLAYER_X = 74;
 
 export const PAL = {
-  skyHi:    '#2f7cc0',
-  skyMid:   '#5aa8de',
-  skyLo:    '#9ad6f2',
-  skyHorz:  '#d5f0fb',
+  // Sky is a smooth vertical ramp between these three stops. No banding.
+  skyTop:   '#2b78bd',
+  skyMid:   '#7ec6e8',
+  skyLow:   '#d7f1fb',
   sun:      '#fff6cf',
   sunGlow:  '#ffdf8e',
   cloud:    '#ffffff',
-  cloudSh:  '#c9e4f4',
+  cloudSh:  '#cfe6f5',
   island:   '#2c6b57',
-  islandDk: '#1c4a3d',
+  islandDk: '#1b4839',
+  islandLt: '#3f8f6c',
   islandSand: '#e6d7a8',
-  seaFar:   '#155a8a',
+
+  // The barrel standing behind the lanes.
+  waveLip:   '#ffffff',
+  waveEdge:  '#9fe1f5',
+  waveGlass: '#6fd8f0',
+  // Shadow thrown by the overhanging lip. This is what makes the wave read
+  // as pitching over rather than as a flat blue stripe.
+  waveShadow: '#072f4d',
+  waveFace: ['#5cbde6', '#2f9ad0', '#1c78b4', '#155f96'],
+  waveWash:  '#dff4fd',
+  tubeIn:    '#06263c',
+  tubeMid:   '#0c4165',
+  tubeRim:   '#b6ecfb',
+
   // Lane water, far (top) to near (bottom). Brighter as it comes toward you.
   lane:      ['#0b3a63', '#0f4a7a', '#145d95', '#1a72b0', '#2189cb'],
   laneShade: ['#082e50', '#0b3c66', '#104d7d', '#155f95', '#1a73ad'],
   glintFar:  '#1d5c8a',
   glintNear: '#3d92c4',
   laneEdge:  '#8ddcf7',
+
   foam:     '#ffffff',
-  foamSh:   '#bfe6f7',
+  foamSh:   '#c9edfb',
   shore:    '#0a3557',
   ink:      '#07202f',
   hud:      '#ffffff',
@@ -58,13 +77,11 @@ export const TUNE = {
   hitInvuln:    1.4,
 
   rampAir:      1.05,   // seconds of air off a wave lip
-  rampHeight:   26,
+  rampHeight:   28,
 
-  // The whitewater runs at its own pace. It ramps slightly slower than the
-  // player's base speed, so a clean run pulls away and every mistake gives
-  // ground back. Boosting is how you buy breathing room.
-  // Note the ramp is steeper than speedRamp: past about half a minute the foam
-  // is quicker than your cruising speed, so late runs live or die on the boost.
+  // The whitewater runs at its own pace. Note the ramp is steeper than
+  // speedRamp: past about half a minute the foam is quicker than your cruising
+  // speed, so late runs live or die on the boost.
   foamStart:    86,
   foamRamp:     2.6,
   foamSpeedMax: 320,

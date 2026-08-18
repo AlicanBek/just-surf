@@ -5,6 +5,7 @@ import { drawText } from './font.js';
 import { SPRITES, SURFER_PIVOT, drawRotated } from './sprites.js';
 import { Scene } from './scene.js';
 import { drawOcean, drawFoamWall } from './ocean.js';
+import { drawWave } from './wave.js';
 import { Field } from './entities.js';
 import { Player } from './player.js';
 import { ROSTER, getCharacter, loadSave, writeSave, characterSprites } from './characters.js';
@@ -302,15 +303,25 @@ export class Game {
   }
 
   drawWorld(ctx) {
-    const sx = this.state === 'play' || this.state === 'over' ? this.scrollX : this.menuScroll;
+    // The menu and shop scroll their own idle camera, and have no run in
+    // progress, so the chasing whitewater has no meaningful position there.
+    const inRun = this.state === 'play' || this.state === 'over';
+    const sx = inRun ? this.scrollX : this.menuScroll;
+
     this.scene.drawSky(ctx, sx);
+    drawWave(ctx, sx, this.t);
+    this.scene.drawSharks(ctx, sx);
     drawOcean(ctx, sx, this.t);
-    this.scene.drawDolphin(ctx, sx);
+    this.scene.drawDolphin(ctx);
     this.field.draw(ctx, sx);
-    this.player.draw(ctx, this.t);
-    this.drawDanger(ctx, this.foamX - sx);
-    drawFoamWall(ctx, this.foamX - sx, this.t);
-    if (this.player.barrelT > 0) this.drawBarrel(ctx);
+    // Outside a run the live surfer is stale (very likely still mid-wipeout),
+    // and the menu and shop draw their own preview instead.
+    if (inRun) {
+      this.player.draw(ctx, this.t);
+      this.drawDanger(ctx, this.foamX - sx);
+      drawFoamWall(ctx, this.foamX - sx, this.t);
+      if (this.player.barrelT > 0) this.drawBarrel(ctx);
+    }
   }
 
   drawBarrel(ctx) {
@@ -366,7 +377,7 @@ export class Game {
     ctx.drawImage(SPRITES.shell, 158, 104);
     drawText(ctx, String(this.save.shells), 169, 105, { color: PAL.hud });
 
-    drawRotated(ctx, characterSprites(ch.id).ride, 70, laneY(2), 0, SURFER_PIVOT);
+    drawRotated(ctx, characterSprites(ch.id).ride, 74, laneY(2), 0, SURFER_PIVOT);
 
     button(ctx, R.play, 'PADDLE OUT', { active: true, scale: 1 });
     button(ctx, R.surfers, 'SURFERS');

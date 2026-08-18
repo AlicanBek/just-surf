@@ -4,14 +4,14 @@ import { SPRITES } from './sprites.js';
 // w/h are the hitbox, centred on the lane line. `base` is how far below the
 // lane line the sprite's bottom edge sits, so things look like they float.
 const KINDS = {
-  rock:  { sprite: 'rock',  w: 12, h: 8, base: 5, solid: true },
-  buoy:  { sprite: 'buoy',  w: 7,  h: 8, base: 5, solid: true },
-  log:   { sprite: 'log',   w: 18, h: 7, base: 4, solid: true },
-  shark: { sprite: 'shark', w: 11, h: 7, base: 4, solid: true, drifts: true },
-  shell: { sprite: 'shell', w: 9,  h: 9, base: 4, pickup: 'shell' },
-  pearl: { sprite: 'pearl', w: 9,  h: 9, base: 3, pickup: 'pearl' },
-  heart: { sprite: 'heart', w: 9,  h: 9, base: 3, pickup: 'heart' },
-  ramp:  { sprite: 'ramp',  w: 12, h: 9, base: 5, ramp: true },
+  rock:  { sprite: 'rock',  w: 14, h: 9,  base: 6, solid: true },
+  buoy:  { sprite: 'buoy',  w: 8,  h: 9,  base: 6, solid: true },
+  log:   { sprite: 'log',   w: 22, h: 8,  base: 5, solid: true },
+  shark: { sprite: 'shark', w: 13, h: 8,  base: 8, solid: true, drifts: true },
+  shell: { sprite: 'shell', w: 10, h: 10, base: 5, pickup: 'shell' },
+  pearl: { sprite: 'pearl', w: 10, h: 10, base: 4, pickup: 'pearl' },
+  heart: { sprite: 'heart', w: 10, h: 10, base: 4, pickup: 'heart' },
+  ramp:  { sprite: 'ramp',  w: 14, h: 10, base: 6, ramp: true },
 };
 
 export const OBSTACLES = ['rock', 'buoy', 'log', 'rock', 'shark'];

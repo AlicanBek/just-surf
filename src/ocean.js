@@ -1,4 +1,4 @@
-import { W, H, PAL, LANES, LANE_TOP, LANE_H, PLAY_BOTTOM, HORIZON } from './config.js';
+import { W, H, PAL, LANES, LANE_TOP, LANE_H, PLAY_BOTTOM } from './config.js';
 
 /** Cheap deterministic noise, so churn is stable within a frame. */
 export function hash(a, b) {
@@ -11,16 +11,6 @@ export function hash(a, b) {
 const PARALLAX = [0.72, 0.82, 0.92, 1.0, 1.1];
 
 export function drawOcean(ctx, scrollX, t) {
-  // Distant chop between the horizon and the first lane.
-  ctx.fillStyle = PAL.seaFar;
-  ctx.fillRect(0, HORIZON, W, LANE_TOP - HORIZON);
-  ctx.fillStyle = PAL.foamSh;
-  for (let x = 0; x < W; x++) {
-    if (hash(x + Math.floor(scrollX * 0.08), Math.floor(t * 2)) < 0.055) {
-      ctx.fillRect(x, HORIZON + 1 + Math.floor(hash(x, 5) * 4), 2, 1);
-    }
-  }
-
   for (let i = 0; i < LANES; i++) {
     const top = LANE_TOP + i * LANE_H;
     ctx.fillStyle = PAL.lane[i];
@@ -125,7 +115,7 @@ export function drawFoamWall(ctx, edge, t) {
     const wobble = Math.sin(t * 6 + x * 0.4) * 1.5;
     const top = Math.round(LANE_TOP - rise + wobble);
     ctx.fillStyle = PAL.foam;
-    ctx.fillRect(x, Math.max(HORIZON, top), 1, H - Math.max(HORIZON, top));
+    ctx.fillRect(x, top, 1, H - top);
 
     const churn = Math.floor(t * 10);
     for (let i = 0; i < 4; i++) {
@@ -144,6 +134,6 @@ export function drawFoamWall(ctx, edge, t) {
     const x = right + Math.floor(hash(seed, 1) * 7) - 2;
     if (x < 0 || x >= W) continue;
     const y = LANE_TOP + Math.floor(hash(seed, 2) * (PLAY_BOTTOM - LANE_TOP)) - 12;
-    ctx.fillRect(x, Math.max(HORIZON, y), 1, 1);
+    ctx.fillRect(x, Math.max(LANE_TOP - 20, y), 1, 1);
   }
 }

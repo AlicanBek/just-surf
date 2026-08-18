@@ -154,7 +154,7 @@ export class Player {
     while (this.spawnRate >= 1) {
       this.spawnRate -= 1;
       this.parts.push({
-        x: this.x - 9, y: this.y + 2 + (Math.random() * 3 - 1),
+        x: this.x - 13, y: this.y + 2 + (Math.random() * 3 - 1),
         vx: -(30 + Math.random() * 70), vy: (Math.random() - 0.5) * 22,
         life: 0.22 + Math.random() * 0.3,
       });
@@ -191,7 +191,7 @@ export class Player {
     // Shadow on the water while airborne, so the landing lane is obvious.
     if (this.airHeight > 1) {
       const sy = laneY(this.laneF) + 4;
-      const wid = Math.max(6, 16 - Math.round(this.airHeight / 4));
+      const wid = Math.max(8, 22 - Math.round(this.airHeight / 4));
       ctx.globalAlpha = 0.3;
       ctx.fillStyle = PAL.ink;
       ctx.fillRect(Math.round(this.x - wid / 2), Math.round(sy), wid, 2);
@@ -207,9 +207,9 @@ export class Player {
     else if (this.boosting) pose = 'tuck';
 
     if (this.barrelT > 0) {
-      const r = 13 + Math.sin(t * 12) * 1.5;
-      glow(ctx, this.x, this.y - 6, r, 0.22, PAL.barrel);
-      glow(ctx, this.x, this.y - 6, r, 0.55, PAL.barrel, true);
+      const r = 17 + Math.sin(t * 12) * 1.5;
+      glow(ctx, this.x, this.y - 9, r, 0.22, PAL.barrel);
+      glow(ctx, this.x, this.y - 9, r, 0.55, PAL.barrel, true);
     }
 
     drawRotated(ctx, this.sprites[pose], this.x, this.y, this.angle, SURFER_PIVOT);
@@ -217,7 +217,7 @@ export class Player {
     if (this.shield) {
       ctx.strokeStyle = PAL.good;
       ctx.globalAlpha = 0.7 + Math.sin(t * 6) * 0.2;
-      ctx.strokeRect(Math.round(this.x - 10) + 0.5, Math.round(this.y - 14) + 0.5, 20, 20);
+      ctx.strokeRect(Math.round(this.x - 13) + 0.5, Math.round(this.y - 21) + 0.5, 26, 27);
       ctx.globalAlpha = 1;
     }
   }

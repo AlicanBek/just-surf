@@ -75,8 +75,9 @@ Sound is synthesised on the fly with WebAudio.
 | `src/game.js` | State machine, collisions, scoring, every screen |
 | `src/player.js` | Lane movement, boost, air, hit and wipeout states |
 | `src/entities.js` | Obstacle and pickup definitions, and the row spawner |
+| `src/wave.js` | The big barrel standing behind the playfield |
 | `src/ocean.js` | The five lanes, the water, the whitewater wall |
-| `src/scene.js` | Sky, sun, clouds, island, gulls, the occasional dolphin |
+| `src/scene.js` | Sky, sun, clouds, island, gulls, cruising fins, the dolphin |
 | `src/sprites.js` | Every sprite, as character grids |
 | `src/font.js` | The 5×7 bitmap font |
 | `src/ui.js` | Thumb buttons, HUD, shared widgets |
@@ -87,6 +88,12 @@ Sound is synthesised on the fly with WebAudio.
 Tuning lives in one place: `TUNE` in `src/config.js`. Speed ramp, foam pace,
 boost drain, barrel length and lane-switch time are all there.
 
-`window.surf` is exposed for poking at a running game from the console —
-`surf.step(120)` advances 120 frames by hand, which is handy when the tab is
-backgrounded and `requestAnimationFrame` is throttled.
+The screen is carved up vertically: a thin band of clean sky at the top, then a
+large wave that barrels open every few seconds, then the five rideable lanes,
+then foreground water where the thumb buttons sit. Those bounds all come from
+`src/config.js`, so moving them moves everything.
+
+`window.surf` is exposed for poking at a running game from the console.
+`surf.step(120)` advances 120 frames by hand and `surf.pause()` / `surf.resume()`
+freeze the loop — both handy when the tab is backgrounded and
+`requestAnimationFrame` is throttled.
