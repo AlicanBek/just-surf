@@ -25,7 +25,7 @@ export const ROSTER = [
     name: 'MUJDE',
     blurb: 'NEW TO THE LINEUP',
     perk: 'BOOST LASTS LONGER',
-    cost: 350,
+    cost: 300,
     colors: {
       s: '#d9a074', S: '#ad7850', 2: '#d9a074', Z: '#d9a074',
       h: '#4a2f1e', H: '#6d4728', 3: '#4a2f1e',
@@ -39,7 +39,7 @@ export const ROSTER = [
     name: 'ZEYNEP',
     blurb: 'FIRST OUT EVERY MORNING',
     perk: '+20% SHELLS',
-    cost: 1200,
+    cost: 1000,
     colors: {
       2: '#f0c49a',
       s: '#f0c49a', S: '#c99a72', Z: '#f0c49a',
@@ -54,7 +54,7 @@ export const ROSTER = [
     name: 'CINDY',
     blurb: 'NINE LIVES, ONE BOARD',
     perk: 'HIGH TIDE FILLS FASTER',
-    cost: 2600,
+    cost: 2000,
     colors: {
       // A grey cat, not a person: mid fur over the body, darker fur on the
       // crown, ears and tail, cream markings on the muzzle, chin, chest and
@@ -72,7 +72,7 @@ export const ROSTER = [
     name: 'ZEYNA',
     blurb: 'ZEYNEP AFTER THE STORM',
     perk: 'FREE SHIELD EACH RUN',
-    cost: 5000,
+    cost: 3600,
     colors: {
       2: '#c98a52',
       s: '#c98a52', S: '#a06a3a', Z: '#c98a52',

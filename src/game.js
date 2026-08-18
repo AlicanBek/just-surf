@@ -228,7 +228,7 @@ export class Game {
         const V = {
           shell:    { shells: 1,  score: 12,  tide: 1, note: null },
           pearl:    { shells: 5,  score: 60,  tide: 3, note: 'PEARL' },
-          icecream: { shells: 12, score: 150, tide: 6, note: 'ICE CREAM!' },
+          icecream: { shells: 16, score: 150, tide: 6, note: 'ICE CREAM!' },
         }[e.kind];
 
         this.runShells += V.shells * mult;

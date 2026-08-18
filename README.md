@@ -13,7 +13,7 @@ the way, hoover up shells, and keep ahead of the foam.
 
 - **Shells** are the currency. Spend them on new surfers.
 - **Pearls** are worth five shells and are usually guarded.
-- **Ice cream** is the best pickup in the game at twelve shells, and is always
+- **Ice cream** is the best pickup in the game at sixteen shells, and is always
   boxed in by obstacles. Nothing that good is free.
 - **Hearts** give a life back, and only turn up when you have lost one.
 - **Ramps** (the gold chevron) launch you over everything in that lane. You can
@@ -23,10 +23,9 @@ the way, hoover up shells, and keep ahead of the foam.
   left. Drains fast, refills slowly, so save it for when the foam is breathing
   down your neck.
 - **HIGH TIDE** fires automatically once its meter fills. For seven seconds every
-  pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 36 shells
+  pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 48 shells
   — and nothing can hurt you: obstacles break up on contact instead of costing a
   life, and they cannot make the whitewater surge forward either.
-  It is a payout, not a shield: obstacles still hurt.
 
 Three hits ends the run — but so does the whitewater behind you. It runs to its
 own clock and ramps faster than your cruising speed, so from about half a minute
@@ -52,10 +51,10 @@ Progress is saved to `localStorage`.
 | Surfer | Cost | Perk |
 |---|---|---|
 | Jungle Boy | free | Fastest lane switch |
-| Mujde | 350 | Boost lasts longer |
-| Zeynep | 1200 | +20% shells |
-| Cindy | 2600 | HIGH TIDE fills faster |
-| Zeyna | 5000 | Free shield each run |
+| Mujde | 300 | Boost lasts longer |
+| Zeynep | 1000 | +20% shells |
+| Cindy | 2000 | HIGH TIDE fills faster |
+| Zeyna | 3600 | Free shield each run |
 
 ## Running it
 
