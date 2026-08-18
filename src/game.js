@@ -9,12 +9,12 @@ import { drawBigWave } from './bigwave.js';
 import { Field } from './entities.js';
 import { Player } from './player.js';
 import { ROSTER, getCharacter, loadSave, writeSave, characterSprites } from './characters.js';
-import { BTN, drawPad, drawHud, panel, button, meter } from './ui.js';
+import { BTN, drawPad, drawHud, panel, button, meter, fitScale } from './ui.js';
 
 const R = {
-  play:     { x: 112, y: 154, w: 96,  h: 22 },
-  surfers:  { x: 8,   y: 156, w: 76,  h: 18 },
-  sound:    { x: 282, y: 156, w: 30,  h: 18 },
+  play:     { x: 104, y: 150, w: 112, h: 26 },
+  surfers:  { x: 8,   y: 152, w: 84,  h: 24 },
+  sound:    { x: 276, y: 152, w: 36,  h: 24 },
   prev:     { x: 8,   y: 74,  w: 22,  h: 30 },
   next:     { x: 88,  y: 74,  w: 22,  h: 30 },
   action:   { x: 168, y: 152, w: 144, h: 24 },
@@ -386,9 +386,13 @@ export class Game {
     const paddling = Math.floor(this.t * 3) % 2 ? 'paddleB' : 'paddleA';
     drawRotated(ctx, characterSprites(ch.id)[paddling], 74, laneY(2), 0, SURFER_PIVOT);
 
-    button(ctx, R.play, 'PADDLE OUT', { active: true, scale: 1 });
-    button(ctx, R.surfers, 'SURFERS');
-    button(ctx, R.sound, this.sfx.muted ? 'OFF' : 'ON', { dim: this.sfx.muted });
+    const sound = this.sfx.muted ? 'OFF' : 'ON';
+    const menuScale = fitScale([
+      ['PADDLE OUT', R.play], ['SURFERS', R.surfers], [sound, R.sound],
+    ]);
+    button(ctx, R.play, 'PADDLE OUT', { active: true, scale: menuScale });
+    button(ctx, R.surfers, 'SURFERS', { scale: menuScale });
+    button(ctx, R.sound, sound, { dim: this.sfx.muted, scale: menuScale });
   }
 
   drawShop(ctx) {
@@ -404,9 +408,9 @@ export class Game {
     const afford = this.save.shells >= ch.cost;
 
     drawText(ctx, 'SURFERS', 8, 6, { scale: 2, color: PAL.hud, outline: PAL.ink });
-    ctx.drawImage(SPRITES.shell, W - 78, 7);
-    drawText(ctx, String(this.save.shells), W - 8, 6, {
-      align: 'right', scale: 2, color: PAL.accent, outline: PAL.ink,
+    ctx.drawImage(SPRITES.shell, W - 70, 7);
+    drawText(ctx, String(this.save.shells), W - 8, 7, {
+      align: 'right', scale: 1.5, color: PAL.accent, outline: PAL.ink,
     });
 
     // Preview, at double size so the palette reads.
@@ -434,8 +438,8 @@ export class Game {
     drawText(ctx, ch.perk, 130, 82, { color: PAL.good });
 
     if (owned) {
-      drawText(ctx, selected ? 'RIDING NOW' : 'UNLOCKED', 130, 106, {
-        scale: 2, color: selected ? PAL.tide : PAL.hud,
+      drawText(ctx, selected ? 'RIDING NOW' : 'UNLOCKED', 130, 108, {
+        scale: 1.5, color: selected ? PAL.tide : PAL.hud,
       });
     } else {
       drawText(ctx, 'COST', 130, 102, { color: PAL.foamSh });
@@ -447,13 +451,13 @@ export class Game {
       });
     }
 
-    const label = owned ? (selected ? 'READY' : 'RIDE THIS ONE')
-      : afford ? 'UNLOCK' : 'NOT ENOUGH SHELLS';
+    const label = owned ? (selected ? 'READY' : 'SELECT')
+      : afford ? 'UNLOCK' : 'NOT ENOUGH';
+    const shopScale = fitScale([[label, R.action], ['BACK', R.back]]);
     button(ctx, R.action, label, {
-      active: owned ? !selected : afford, dim: !owned && !afford,
-      scale: owned && selected ? 1 : afford || owned ? 2 : 1,
+      active: owned ? !selected : afford, dim: !owned && !afford, scale: shopScale,
     });
-    button(ctx, R.back, 'BACK', { scale: 1 });
+    button(ctx, R.back, 'BACK', { scale: shopScale });
 
     if (this.notice > 0) {
       drawText(ctx, 'GO COLLECT MORE SHELLS!', W / 2, 146, {
@@ -498,7 +502,8 @@ export class Game {
       align: 'right', color: PAL.foamSh,
     });
 
-    button(ctx, R.retry, 'AGAIN', { active: true });
-    button(ctx, R.toShop, 'SURFERS');
+    const overScale = fitScale([['AGAIN', R.retry], ['SURFERS', R.toShop]]);
+    button(ctx, R.retry, 'AGAIN', { active: true, scale: overScale });
+    button(ctx, R.toShop, 'SURFERS', { scale: overScale });
   }
 }

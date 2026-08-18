@@ -108,6 +108,10 @@ is still just a handful of hex codes in `src/characters.js`.
 The font takes fractional scales — `scale: 1.5` snaps each glyph pixel from its
 own edges, so half steps still land on whole pixels.
 
+Buttons size their own text. `button()` picks the largest scale the label fits
+at, and `fitScale()` takes a whole row of them and returns one shared scale, so
+a row reads as a set and no label can ever overflow its box.
+
 `window.surf` is exposed for poking at a running game from the console.
 `surf.step(120)` advances 120 frames by hand and `surf.pause()` / `surf.resume()`
 freeze the loop — both handy when the tab is backgrounded and

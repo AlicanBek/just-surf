@@ -1,5 +1,5 @@
 import { W, PAL, TUNE } from './config.js';
-import { drawText } from './font.js';
+import { drawText, textWidth, GLYPH_H } from './font.js';
 import { SPRITES } from './sprites.js';
 
 // Thumb controls. The hit rects are deliberately larger than the drawn circles.
@@ -59,8 +59,26 @@ export function panel(ctx, x, y, w, h, alpha = 0.82) {
   ctx.fillRect(x + w - 1, y, 1, h);
 }
 
+const SCALES = [2, 1.5, 1];
+const PAD_X = 10;
+const PAD_Y = 8;
+
+/**
+ * Largest text scale at which every one of these labels fits its rect. Buttons
+ * drawn as a row share one scale so they read as a set, and nothing can
+ * overflow its box no matter how long a label gets.
+ */
+export function fitScale(pairs) {
+  for (const sc of SCALES) {
+    if (pairs.every(([label, r]) =>
+      textWidth(label, sc) <= r.w - PAD_X && GLYPH_H * sc <= r.h - PAD_Y)) return sc;
+  }
+  return 1;
+}
+
 export function button(ctx, r, label, opts = {}) {
-  const { active = false, dim = false, scale = 1 } = opts;
+  const { active = false, dim = false } = opts;
+  const scale = opts.scale ?? fitScale([[label, r]]);
   ctx.fillStyle = active ? PAL.accent : dim ? '#123049' : '#17456b';
   ctx.fillRect(r.x, r.y, r.w, r.h);
   ctx.fillStyle = active ? PAL.foam : PAL.foamSh;
