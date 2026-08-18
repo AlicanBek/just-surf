@@ -34,7 +34,7 @@ export class Scene {
     // One arc per appearance: in from the left, up, down, gone.
     if (!this.dolphin && this.nextDolphin <= 0) {
       const lane = Math.random() < 0.5 ? 0 : 1;
-      this.dolphin = { sx: -36, base: laneY(lane), y: 0, vy: -132 };
+      this.dolphin = { sx: -36, base: laneY(lane), y: 0, vy: -146 };
       this.nextDolphin = 10 + Math.random() * 12;
     }
 
@@ -42,7 +42,7 @@ export class Scene {
       const d = this.dolphin;
       d.sx += 150 * dt;
       d.y += d.vy * dt;
-      d.vy += 190 * dt;
+      d.vy += 215 * dt;
       if ((d.y >= 0 && d.vy > 0) || d.sx > W + 44) {
         if (d.y >= 0) this.splash(d.sx, d.base);
         this.dolphin = null;
@@ -179,8 +179,10 @@ export class Scene {
 
     const d = this.dolphin;
     if (!d || d.sx < -40 || d.sx > W + 44) return;
-    // Nose follows the arc: up on the way out, down on the way back in.
-    const angle = Math.atan2(d.vy, 150) * 0.85;
-    drawRotated(ctx, SPRITES.dolphin, d.sx, d.base + d.y, angle, { x: 15, y: 8 });
+    // Leaves the water already pitched up and comes back down headfirst. The
+    // sprite is drawn arched, so it carries some pitch of its own; this is
+    // dialled back to suit rather than measured off the true velocity angle.
+    const angle = Math.atan2(d.vy, 96) * 0.72;
+    drawRotated(ctx, SPRITES.dolphin, d.sx, d.base + d.y, angle, { x: 15, y: 12 });
   }
 }

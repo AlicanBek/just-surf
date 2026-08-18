@@ -106,18 +106,21 @@ export function drawHud(ctx, game) {
 
   // Lives.
   for (let i = 0; i < p.maxLives; i++) {
-    ctx.drawImage(i < p.lives ? SPRITES.heart : SPRITES.heartDim, 6 + i * 9, 6);
+    ctx.drawImage(i < p.lives ? SPRITES.heart : SPRITES.heartDim, 6 + i * 9, 5);
   }
 
-  // Shells this run.
-  ctx.drawImage(SPRITES.shell, 6, 15);
-  drawText(ctx, String(game.runShells), 17, 16, { color: PAL.hud, shadow: PAL.ink });
+  // Shells this run, at double size: it is the number you are playing for.
+  const sh = SPRITES.shell;
+  ctx.drawImage(sh, 0, 0, sh.width, sh.height, 5, 16, sh.width * 2, sh.height * 2);
+  drawText(ctx, String(game.runShells), 28, 18, {
+    scale: 2, color: PAL.accent, outline: PAL.ink,
+  });
 
   // Score, top right.
   drawText(ctx, String(Math.floor(game.score)), W - 6, 5, {
-    scale: 2, align: 'right', color: PAL.hud, outline: PAL.ink,
+    scale: 1.5, align: 'right', color: PAL.hud, outline: PAL.ink,
   });
-  drawText(ctx, `BEST ${game.save.best}`, W - 6, 21, {
+  drawText(ctx, `BEST ${game.save.best}`, W - 6, 18, {
     align: 'right', color: PAL.foamSh, shadow: PAL.ink,
   });
 

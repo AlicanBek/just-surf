@@ -101,6 +101,13 @@ screen it has come is how much trouble you are in.
 Runs open with the surfer prone and paddling, then a crouch, then upright: three
 frames over 0.9 seconds, invulnerable until they are on their feet.
 
+Surfers are drawn bare-chested in boardshorts, so a character's palette is its
+shorts (`w`/`W`), hair (`h`/`H`), skin (`s`/`S`) and board (`b`/`r`). Adding one
+is still just a handful of hex codes in `src/characters.js`.
+
+The font takes fractional scales — `scale: 1.5` snaps each glyph pixel from its
+own edges, so half steps still land on whole pixels.
+
 `window.surf` is exposed for poking at a running game from the console.
 `surf.step(120)` advances 120 frames by hand and `surf.pause()` / `surf.resume()`
 freeze the loop — both handy when the tab is backgrounded and

@@ -99,8 +99,14 @@ function blit(ctx, s, x, y, scale, color) {
   let pen = x;
   for (const ch of s) {
     const px = CACHE[ch];
+    // Each glyph pixel is snapped from its own edges rather than drawn at a
+    // fixed size, so fractional scales like 1.5 still land on whole pixels.
     if (px) for (const [gx, gy] of px) {
-      ctx.fillRect(pen + gx * scale, y + gy * scale, scale, scale);
+      const x0 = Math.round(pen + gx * scale);
+      const y0 = Math.round(y + gy * scale);
+      ctx.fillRect(x0, y0,
+        Math.round(pen + (gx + 1) * scale) - x0,
+        Math.round(y + (gy + 1) * scale) - y0);
     }
     pen += (GLYPH_W + TRACKING) * scale;
   }
