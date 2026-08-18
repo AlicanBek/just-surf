@@ -52,7 +52,7 @@ Progress is saved to `localStorage`.
 | Surfer | Cost | Perk |
 |---|---|---|
 | Jungle Boy | free | Fastest lane switch |
-| Mujde | 350 | Longer mercy after a hit |
+| Mujde | 350 | Boost lasts longer |
 | Zeynep | 1200 | +20% shells |
 | Cindy | 2600 | HIGH TIDE fills faster |
 | Zeyna | 5000 | Free shield each run |

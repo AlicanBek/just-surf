@@ -23,8 +23,8 @@ export const ROSTER = [
   {
     id: 'mujde',
     name: 'MUJDE',
-    blurb: 'STILL FINDING HER FEET',
-    perk: 'LONGER MERCY AFTER A HIT',
+    blurb: 'LEARNING THE ROPES',
+    perk: 'BOOST LASTS LONGER',
     cost: 350,
     colors: {
       s: '#d9a074', S: '#ad7850', 2: '#d9a074', Z: '#d9a074',
@@ -32,7 +32,7 @@ export const ROSTER = [
       w: '#fff8ee', W: '#ded2bc', B: '#fff8ee',
       b: '#3f8fd6', r: '#fff8ee',
     },
-    mods: { hitInvuln: 2.4 },
+    mods: { boostDrain: 0.28 },   // 3.6s of boost against the usual 2.5s
   },
   {
     id: 'zeynep',
