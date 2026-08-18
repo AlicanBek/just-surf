@@ -2,11 +2,14 @@ import { W, PAL, TUNE } from './config.js';
 import { drawText, textWidth, GLYPH_H } from './font.js';
 import { SPRITES } from './sprites.js';
 
-// Thumb controls. The hit rects are deliberately larger than the drawn circles.
+// Thumb controls. Drawn inside the foreground strip below the last lane so they
+// never cover water you are riding on, and kept clear of the screen edges: the
+// old boost ring was drawn at a radius that ran off the bottom and the right.
+// `hit` is deliberately larger than `box`, so fingers get a generous target.
 export const BTN = {
-  up:    { cx: 24,  cy: 166, r: 12, hit: { x: 2,   y: 146, w: 44, h: 34 } },
-  down:  { cx: 60,  cy: 166, r: 12, hit: { x: 46,  y: 146, w: 44, h: 34 } },
-  boost: { cx: 292, cy: 166, r: 14, hit: { x: 258, y: 142, w: 60, h: 38 } },
+  up:    { box: { x: 8,   y: 155, w: 40, h: 21 }, hit: { x: 0,   y: 138, w: 46, h: 42 } },
+  down:  { box: { x: 52,  y: 155, w: 40, h: 21 }, hit: { x: 46,  y: 138, w: 46, h: 42 } },
+  boost: { box: { x: 246, y: 155, w: 66, h: 21 }, hit: { x: 238, y: 138, w: 82, h: 42 } },
 };
 
 export function disc(ctx, cx, cy, r, color) {
@@ -28,10 +31,10 @@ function ring(ctx, cx, cy, r, frac, on, off) {
 
 function triangle(ctx, cx, cy, dir, color) {
   ctx.fillStyle = color;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     const wid = i * 2 + 1;
-    const y = dir < 0 ? cy - 3 + i : cy + 3 - i;
-    ctx.fillRect(cx - i, y, wid, 1);
+    const y = dir < 0 ? cy - 4 + i : cy + 4 - i;
+    ctx.fillRect(Math.round(cx) - i, Math.round(y), wid, 1);
   }
 }
 
@@ -108,24 +111,53 @@ export function meter(ctx, x, y, w, h, frac, color, back = '#0e3350') {
   ctx.fillRect(x, y, Math.round(w * Math.max(0, Math.min(1, frac))), h);
 }
 
-/** The three thumb buttons, with a pressed state driven straight off touches. */
+/** A control-pad key: dark frame, lit face, and an optional fill level. */
+function pad(ctx, b, on, fill = 0) {
+  const { x, y, w, h } = b;
+  ctx.fillStyle = PAL.ink;
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = on ? PAL.accent : '#123f5e';
+  ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+  // Boost shows how much is left as a bar behind its glyph.
+  if (fill > 0 && !on) {
+    ctx.fillStyle = '#1e6f9c';
+    ctx.fillRect(x + 1, y + 1, Math.round((w - 2) * Math.min(1, fill)), h - 2);
+  }
+  // Top edge highlight, bottom edge shadow: enough to read as a key.
+  ctx.fillStyle = on ? PAL.foam : '#2a7ba8';
+  ctx.fillRect(x + 1, y + 1, w - 2, 1);
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = PAL.ink;
+  ctx.fillRect(x + 1, y + h - 2, w - 2, 1);
+  ctx.globalAlpha = 1;
+  // Clipped corners, so the keys are not hard rectangles.
+  ctx.fillStyle = PAL.shore;
+  for (const [cx, cy] of [[x, y], [x + w - 1, y], [x, y + h - 1], [x + w - 1, y + h - 1]]) {
+    ctx.fillRect(cx, cy, 1, 1);
+  }
+}
+
 export function drawPad(ctx, input, player, t) {
   const upOn = input.pointerIn(BTN.up.hit) || input.held('up');
   const dnOn = input.pointerIn(BTN.down.hit) || input.held('down');
   const bsOn = player.boosting;
+  const empty = player.boost <= 0.02;
 
-  disc(ctx, BTN.up.cx, BTN.up.cy, BTN.up.r, upOn ? PAL.accent : '#0d2f47');
-  disc(ctx, BTN.up.cx, BTN.up.cy, BTN.up.r - 2, upOn ? PAL.accent : '#124565');
-  triangle(ctx, BTN.up.cx, BTN.up.cy, -1, upOn ? PAL.ink : PAL.foam);
+  pad(ctx, BTN.up.box, upOn);
+  triangle(ctx, BTN.up.box.x + BTN.up.box.w / 2, BTN.up.box.y + 10, -1,
+    upOn ? PAL.ink : PAL.foam);
 
-  disc(ctx, BTN.down.cx, BTN.down.cy, BTN.down.r, dnOn ? PAL.accent : '#0d2f47');
-  disc(ctx, BTN.down.cx, BTN.down.cy, BTN.down.r - 2, dnOn ? PAL.accent : '#124565');
-  triangle(ctx, BTN.down.cx, BTN.down.cy, 1, dnOn ? PAL.ink : PAL.foam);
+  pad(ctx, BTN.down.box, dnOn);
+  triangle(ctx, BTN.down.box.x + BTN.down.box.w / 2, BTN.down.box.y + 11, 1,
+    dnOn ? PAL.ink : PAL.foam);
 
-  disc(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r, bsOn ? PAL.accent : '#0d2f47');
-  disc(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r - 2, bsOn ? PAL.accent : '#124565');
-  bolt(ctx, BTN.boost.cx, BTN.boost.cy, bsOn ? PAL.ink : PAL.accent);
-  ring(ctx, BTN.boost.cx, BTN.boost.cy, BTN.boost.r + 3, player.boost, PAL.tide, '#0d2f47');
+  pad(ctx, BTN.boost.box, bsOn, player.boost);
+  const b = BTN.boost.box;
+  const ink = bsOn ? PAL.ink : empty ? '#5c7f95' : PAL.accent;
+  bolt(ctx, b.x + 12, b.y + 10, ink);
+  drawText(ctx, 'BOOST', b.x + 22, b.y + 7, {
+    color: bsOn ? PAL.ink : empty ? '#5c7f95' : PAL.foam,
+  });
 }
 
 export function drawHud(ctx, game) {

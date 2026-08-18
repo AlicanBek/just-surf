@@ -18,8 +18,10 @@ the way, hoover up shells, and keep ahead of the foam.
 - **Hearts** give a life back, and only turn up when you have lost one.
 - **Ramps** (the gold chevron) launch you over everything in that lane. You can
   still steer in the air.
-- **Boost** buys distance from the whitewater. The meter drains fast and refills
-  slowly, so save it for when the foam is breathing down your neck.
+- **Boost** buys distance from the whitewater. The key itself is the gauge: it
+  fills as the meter recharges and its bolt greys out when there is nothing
+  left. Drains fast, refills slowly, so save it for when the foam is breathing
+  down your neck.
 - **HIGH TIDE** fires automatically once its meter fills. For seven seconds every
   pickup you grab is worth **triple** — an ice cream during HIGH TIDE is 36 shells.
   It is a payout, not a shield: obstacles still hurt.
@@ -33,8 +35,8 @@ well back while you ride clean and rears into view once you start taking hits.
 
 | | Touch | Keyboard |
 |---|---|---|
-| Change lane | ▲ / ▼ buttons, bottom left | `↑` `↓` or `W` `S` |
-| Boost | hold ⚡, bottom right | hold `Space` or `Shift` |
+| Change lane | ▲ / ▼ keys, bottom left | `↑` `↓` or `W` `S` |
+| Boost | hold the BOOST key, bottom right | hold `Space` or `Shift` |
 | Confirm / retry | on-screen buttons | `Enter` or `R` |
 | Mute | sound button on the title screen | `M` |
 
