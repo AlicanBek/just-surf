@@ -27,7 +27,8 @@ export const ROSTER = [
     cost: 400,
     colors: {
       s: '#9aa3ab', S: '#6c757d', B: '#9aa3ab', Z: '#9aa3ab',
-      h: '#5a636b', H: '#8a939b', N: '#7d868e',
+      // No hair: the head is the same plate as the body, with a cone on top.
+      h: '#9aa3ab', H: '#c8d0d8', N: '#7d868e',
       w: '#7d868e', W: '#c8d0d8',
       b: '#c8d0d8', r: '#4a5058',
     },
@@ -54,10 +55,12 @@ export const ROSTER = [
     perk: 'HIGH TIDE FILLS FASTER',
     cost: 2600,
     colors: {
-      s: '#d8dde2', S: '#a8b0b8', B: '#d8dde2',
-      h: '#c0c8d0', H: '#eef2f6', 1: '#c0c8d0', Z: '#ffb3c6', 4: '#c0c8d0',
-      w: '#6f777f', W: '#b8c0c8',
-      b: '#ffd24a', r: '#6f777f',
+      s: '#4a5560', S: '#333c45', B: '#4a5560',
+      // Head is fur like the rest of her, H and W are the white patches, and the
+      // shorts region is fur too: a cat does not wear shorts.
+      h: '#4a5560', H: '#f2f5f7', 1: '#4a5560', Z: '#ffb3c6', 4: '#4a5560',
+      w: '#4a5560', W: '#f2f5f7',
+      b: '#e0342a', r: '#fff4dc',
     },
     mods: { tideNeed: 12 },
   },
@@ -71,7 +74,7 @@ export const ROSTER = [
       s: '#c98a52', S: '#a06a3a', Z: '#c98a52',
       h: '#3fd07a', H: '#8fffb8', 3: '#3fd07a',
       w: '#d0ff3f', W: '#ffff8f', B: '#d0ff3f',
-      b: '#1b2330', r: '#d0ff3f',
+      b: '#2fae6a', r: '#d0ff3f',
     },
     mods: { freeShield: true, switchTime: 0.10, shellMul: 1.1 },
   },
