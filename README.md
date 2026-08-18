@@ -123,7 +123,14 @@ already heart-highlight, pearl-dark and wave-blue, so using them meant every
 character wore stray pink ears and a blue tail.
 
 The font takes fractional scales — `scale: 1.5` snaps each glyph pixel from its
-own edges, so half steps still land on whole pixels.
+own edges, so half steps still land on whole pixels. That is fine for a word and
+wrong for a number: the snapping alternates 2,1,2,1 across the columns, so stems
+inside one digit end up different weights. The HUD score and shell counts use
+`drawNumber` instead, a separate 7x9 numeral set drawn at 1:1 with even
+two-pixel strokes.
+
+`tools/make-icons.py` redraws the app icons. It reads the sprite rows and
+palettes out of `src/`, so the icon cannot drift from what the game draws.
 
 Every button in the game is one style: `BTN_H` tall, `BTN_SCALE` text, on every
 screen. `button()` only shrinks a label if it genuinely will not fit, which

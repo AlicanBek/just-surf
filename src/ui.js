@@ -1,5 +1,5 @@
 import { W, PAL, TUNE } from './config.js';
-import { drawText, textWidth, GLYPH_H } from './font.js';
+import { drawText, drawNumber, numberWidth, textWidth, GLYPH_H } from './font.js';
 import { SPRITES } from './sprites.js';
 
 // Thumb controls. Drawn inside the foreground strip below the last lane so they
@@ -96,11 +96,15 @@ export function button(ctx, r, label, opts = {}) {
  * A shell icon sitting right against its count, drawn as one unit so the two
  * never drift apart.
  */
-export function shellCount(ctx, rightX, y, value, scale = 1.5, color = PAL.accent) {
-  const text = String(value);
-  const tw = textWidth(text, scale);
+export function shellCount(ctx, rightX, y, value, big = true, color = PAL.accent) {
   const icon = SPRITES.shell;
-  drawText(ctx, text, rightX, y, { align: 'right', scale, color, outline: PAL.ink });
+  const tw = big ? numberWidth(value) : textWidth(String(value), 1);
+  if (big) {
+    // One pixel down, so a nine-tall numeral sits centred against a ten-tall icon.
+    drawNumber(ctx, value, rightX, y + 1, { align: 'right', color, outline: PAL.ink });
+  } else {
+    drawText(ctx, String(value), rightX, y, { align: 'right', color, outline: PAL.ink });
+  }
   ctx.drawImage(icon, Math.round(rightX - tw - icon.width - 2), Math.round(y));
 }
 
@@ -170,13 +174,12 @@ export function drawHud(ctx, game) {
 
   // Shells this run, icon tight against the number.
   ctx.drawImage(SPRITES.shell, 5, 16);
-  drawText(ctx, String(game.runShells), 17, 17, {
-    scale: 1.5, color: PAL.accent, outline: PAL.ink,
-  });
+  drawNumber(ctx, game.runShells, 17, 17, { color: PAL.accent, outline: PAL.ink });
 
-  // Score, top right.
-  drawText(ctx, String(Math.floor(game.score)), W - 6, 5, {
-    scale: 1.5, align: 'right', color: PAL.hud, outline: PAL.ink,
+  // Score, top right. Both of these are the bold numerals rather than the 5x7
+  // font at 1.5: fractional scaling left the digits with uneven strokes.
+  drawNumber(ctx, Math.floor(game.score), W - 6, 5, {
+    align: 'right', color: PAL.hud, outline: PAL.ink,
   });
   drawText(ctx, `BEST ${game.save.best}`, W - 6, 18, {
     align: 'right', color: PAL.foamSh, shadow: PAL.ink,

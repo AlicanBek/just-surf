@@ -521,7 +521,7 @@ export class Game {
     });
     // Your shell bank, iconed to match the row opposite: left column is this
     // run, right column is all time. "TOTAL" read like a total score.
-    shellCount(ctx, 268, 116, this.save.shells, 1, PAL.foamSh);
+    shellCount(ctx, 268, 116, this.save.shells, false, PAL.foamSh);
 
     button(ctx, R.retry, 'AGAIN', { active: true });
     button(ctx, R.toShop, 'SURFERS');
