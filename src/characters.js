@@ -23,7 +23,7 @@ export const ROSTER = [
   {
     id: 'mujde',
     name: 'MUJDE',
-    blurb: 'LEARNING THE ROPES',
+    blurb: 'STILL WORKING ON HER POP-UP',
     perk: 'BOOST LASTS LONGER',
     cost: 350,
     colors: {
