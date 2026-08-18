@@ -1,7 +1,7 @@
 import {
   W, H, PAL, TUNE, LANE_TOP, PLAY_BOTTOM, laneY, PLAYER_X,
 } from './config.js';
-import { drawText, textWidth } from './font.js';
+import { drawText } from './font.js';
 import { SPRITES, SURFER_PIVOT, drawRotated } from './sprites.js';
 import { Scene } from './scene.js';
 import { drawOcean } from './ocean.js';
@@ -473,24 +473,17 @@ export class Game {
     });
 
     // Twelve pixels under the title, eight above the label: the number needs to
-    // sit on its own rather than touching either. It goes gold on a record, so
-    // NEW BEST! visibly belongs to this number and not to anything else on the
-    // panel.
+    // sit on its own rather than touching either. It goes gold on a record, to
+    // match the label beneath it.
     drawText(ctx, String(Math.floor(this.score)), W / 2, 46, {
       scale: 4, align: 'center',
       color: this.newBest ? PAL.accent : PAL.hud, outline: PAL.ink,
     });
-    // SCORE, with NEW BEST! alongside it when the run set one. The pair is
-    // centred as a unit so the badge reads as belonging to this number.
+    // One label, swapped out on a record.
     if (this.newBest) {
       const flash = Math.floor(this.t * 6) % 2 === 0;
-      const gap = 7;
-      const wa = textWidth('SCORE');
-      const wb = textWidth('NEW BEST!');
-      const left = Math.round(W / 2 - (wa + gap + wb) / 2);
-      drawText(ctx, 'SCORE', left, 82, { color: PAL.accent });
-      drawText(ctx, 'NEW BEST!', left + wa + gap, 82, {
-        color: flash ? PAL.accent : PAL.foam,
+      drawText(ctx, 'NEW BEST SCORE!', W / 2, 82, {
+        align: 'center', color: flash ? PAL.accent : PAL.foam,
       });
     } else {
       drawText(ctx, 'SCORE', W / 2, 82, { align: 'center', color: PAL.foamSh });
